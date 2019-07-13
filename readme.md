@@ -1,8 +1,6 @@
-f-admin基础权限后台
+laravel_layui基础权限后台
 ===============
-❤️ 本项目 [GitHub](https://github.com/fangzesheng/f-admin) / [Gitee(码云)](https://gitee.com/fzsfzs/f-admin)，目前已在公司产品应用，运行在数个客户服务器内。
-
-f-admin基础权限后台是一套基于Laravel框架开发的系统，不需要开发者重复不必要的工作，就可以实现后台功能的快速开发，其主要特点包括：
+laravel_layui基础权限后台是一套基于Laravel框架开发的系统，不需要开发者重复不必要的工作，就可以实现后台功能的快速开发，其主要特点包括：
 - [x] 集成 Composer，安装使用方便。
 - [x] 用户管理可以配置自己的权限。
 - [x] 角色管理可以配置用户及权限。
@@ -13,9 +11,9 @@ f-admin基础权限后台是一套基于Laravel框架开发的系统，不需要
 - [x] pc端和手机端都能适配。
 - [ ] 其它优化，持续进行中 ......
 
-> f-admin的运行环境要求PHP5.4及以上；Laravel 框架要求为5.4及以上（默认是5.4，如果要使用laravel高版本，请先在composer install之前修改composer.json文件）。
+> laravel_layui的运行环境要求PHP5.7及以上；Laravel 框架要求为5.7及以上（默认是5.7，如果要使用laravel高版本，请先在composer install之前修改composer.json文件）。
 
-线上DEMO [f-admin](http://f-admin.fang99.cc)   
+线上DEMO [laravel_layui](http://laravel_layui.fang99.cc)   
 你也可以用手机扫下二维码查看手机效果 ![](./img/code.png)
 
 ## 导航
@@ -77,7 +75,7 @@ f-admin基础权限后台是一套基于Laravel框架开发的系统，不需要
 新建一个文件夹，进入该文件夹，利用git等工具输入以下命令：
 
     git init  
-    git clone https://github.com/fangzesheng/f-admin.git
+    git clone https://github.com/dcnfx/laravel_layui.git
 #### 2.安装依赖
     composer install  
 #### 3.生成APP_KEY
@@ -123,9 +121,9 @@ f-admin基础权限后台是一套基于Laravel框架开发的系统，不需要
     </VirtualHost>
 #### 2.linux(apache)
     <VirtualHost *:80>
-        DocumentRoot /data/wwwroot/default/f-admin/public
+        DocumentRoot /data/wwwroot/default/laravel_layui/public
         ServerName www.fang99.cc
-        <Directory "/data/wwwroot/default/f-admin/public">
+        <Directory "/data/wwwroot/default/laravel_layui/public">
            AllowOverride All
            order deny,allow
            Require all granted
@@ -137,11 +135,11 @@ f-admin基础权限后台是一套基于Laravel框架开发的系统，不需要
         server_name  demo.fang99.cc;
         location / {
             index index.php index.html;
-            root /var/www/f-admin/public/;
+            root /var/www/laravel_layui/public/;
             try_files $uri $uri/ /index.php?$query_string;
         }
         location ~ \.php$ {
-            root   /var/www/f-admin/public/;
+            root   /var/www/laravel_layui/public/;
             fastcgi_pass 127.0.0.1:9000;
             fastcgi_index index.php;
             fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
@@ -149,9 +147,3 @@ f-admin基础权限后台是一套基于Laravel框架开发的系统，不需要
             include /etc/nginx/fastcgi.conf;
         }
     }
-## 感谢
-
-- [layer](http://layer.layui.com/)
-- [laravel](https://laravel.com/)
-
-如果你觉得这个开源项目对你有用，你懂的！谢谢：）

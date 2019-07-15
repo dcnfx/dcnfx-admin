@@ -19,14 +19,12 @@
         <div class="layui-input-block">
             <input type="text" value="{{$menu['title'] ?? ''}}" name="name" required lay-verify="name" placeholder="请输入名称" autocomplete="off" class="layui-input">
         </div>
-
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">排序：</label>
         <div class="layui-input-block">
             <input type="number" value="{{$menu['order'] ?? ''}}" name="order" required lay-verify="order" placeholder="请输入数字" autocomplete="off" class="layui-input">
         </div>
-
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">图标：</label>

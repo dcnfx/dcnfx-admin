@@ -21,6 +21,7 @@ class DataService{
                         $model->order = $inputs['order'];
                         $model->routes = 'url:'.$inputs['uri'];
                         $roles = $inputs['roles'];
+                       // dd($roles);
                         if($inputs['id']){
                             if (is_config_id($inputs['id'], "admin.menu_table_cannot_manage_ids", false))return ['status'=>0,'msg'=>trans('fzs.menus.notedit')];
                             $model->exists = true;

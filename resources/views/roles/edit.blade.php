@@ -28,7 +28,7 @@
         </div>
         <div class="layui-input-block permission">
             @foreach($permission as $permise)
-                <input type="checkbox" name="permission_list[]"
+                <input type="checkbox" name="permission_list"
                        @if($info)
                        @foreach($info->perms as $perm){{$perm->id == $permise['id']?'checked':''}}@endforeach
                        @endif
@@ -41,7 +41,7 @@
 @section('js')
     <script>
         layui.use(['form','jquery','laypage', 'layer'], function() {
-            var form = layui.form(),
+            var form = layui.form,
                 $ = layui.jquery;
             form.on('checkbox(pAllChoose)', function(data) {
                 var child = $(".permission").find('input[type="checkbox"]');
@@ -63,16 +63,17 @@
             });
             form.on('submit(formDemo)', function(data) {
                 var chk_value =[];
-                $('input[name="permission_list[]"]:checked').each(function(){
+                $('input[name="permission_list"]:checked').each(function(){
                     chk_value.push($(this).val());
                 });
-                if($("input[type='permission_list[]']").length>0&&chk_value.length==0){
+                if($("input[type='permission_list']").length>0&&chk_value.length==0){
                     layer.msg('至少选择一个角色权限',{shift: 6,icon:5});
                     return false;
                 }
+                data.field.permission_list = chk_value;
                 $.ajax({
-                    url:"{{url('/roles')}}",
-                    data:$('form').serialize(),
+                    url:"{{route('roles.store')}}",
+                    data: data.field,
                     type:'post',
                     dataType:'json',
                     success:function(res){

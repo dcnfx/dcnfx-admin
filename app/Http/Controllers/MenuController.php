@@ -28,7 +28,7 @@ class MenuController extends BaseController
         $model = new Menu();
         $menu = DataService::handleDate($model,$request->all(),'menus-add_or_update');
         if($menu['status']==1)Log::addLogs(trans('fzs.menus.handle_menu').trans('fzs.common.success'),'/menus/story');
-        else Log::addLogs(trans('fzs.menus.handle_menu').trans('fzs.common.fail'),'/menus/destroy');
+        else Log::addLogs(trans('fzs.menus.handle_menu').trans('fzs.common.fail'),'/menus/story');
         return $menu;
     }
     /**

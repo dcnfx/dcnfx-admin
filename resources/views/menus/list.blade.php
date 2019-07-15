@@ -1,7 +1,7 @@
 @section('title', '菜单列表')
 @section('header')
     <div class="layui-inline">
-    <button class="layui-btn layui-btn-sm layui-btn-normal addBtn" data-desc="添加菜单" data-url="{{url('/menus/0/edit')}}"><i class="layui-icon layui-icon-add-1"></i></button>
+    <button class="layui-btn layui-btn-sm layui-btn-normal addBtn" data-desc="添加菜单" data-url="{{route('menus.edit', 0)}}"><i class="layui-icon layui-icon-add-1"></i></button>
     <button class="layui-btn layui-btn-sm layui-btn-warm freshBtn"><i class="layui-icon layui-icon-refresh-3"></i></button>
     <div class="layui-btn layui-btn-sm layui-btn-normal zkBtn" data-title="展开菜单"><i class="layui-icon">&#xe602;</i></div>
     </div>
@@ -34,12 +34,12 @@
                 <td class="hidden-xs"><input type="number" name="title" autocomplete="off" class="layui-input" value="{{$branch['order']}}" data-id="{{$branch['id']}}" data-url="{{url('/sort')}}" onchange="changeSort('menus',this)"></td>
                 <td class="hidden-xs">Admin</td>
                 <td>{{$branch['title']}}
-                    <a class="layui-btn layui-btn-mini layui-btn-normal showSubBtn" data-id='{{$branch['id']}}'>+</a>
+                    <a class="layui-btn layui-btn-xs layui-btn-normal showSubBtn" data-id='{{$branch['id']}}'>+</a>
                 </td>
                 <td>
                     <div class="layui-inline">
-                        <button class="layui-btn layui-btn-sm layui-btn-normal  edit-btn" data-id="{{$branch['id']}}" data-desc="修改菜单" data-url="{{url('/menus/'. $branch['id'] .'/edit')}}"><i class="layui-icon">&#xe642;</i></button>
-                        <button class="layui-btn layui-btn-sm layui-btn-danger del-btn" data-id="{{$branch['id']}}" data-url="{{url('/menus/'.$branch['id'])}}"><i class="layui-icon">&#xe640;</i></button>
+                        <button class="layui-btn layui-btn-sm layui-btn-normal  edit-btn" data-id="{{$branch['id']}}" data-desc="修改菜单" data-url="{{route('menus.edit',$branch['id'])}}"><i class="layui-icon layui-icon-edit"></i></button>
+                        <button class="layui-btn layui-btn-sm layui-btn-danger del-btn" data-id="{{$branch['id']}}" data-url="{{route('menus.destroy',$branch['id'])}}"><i class="layui-icon layui-icon-delete"></i></button>
                     </div>
                 </td>
             </tr>
@@ -53,8 +53,8 @@
                         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─{{$child_branch['title']}}</td>
                         <td>
                             <div class="layui-inline">
-                                <button class="layui-btn layui-btn-sm layui-btn-normal edit-btn" data-id="{{$child_branch['id']}}"  data-desc="修改菜单" data-url="{{url('/menus/'. $child_branch['id'] .'/edit')}}"><i class="layui-icon layui-icon-edit"></i></button>
-                                <button class="layui-btn layui-btn-sm layui-btn-danger del-btn" data-id="{{$child_branch['id']}}" data-url="{{url('/menus/'.$child_branch['id'])}}"><i class="layui-icon layui-icon-delete"></i></button>
+                                <button class="layui-btn layui-btn-sm layui-btn-normal edit-btn" data-id="{{$child_branch['id']}}"  data-desc="修改菜单" data-url="{{route('menus.edit', $child_branch['id'])}}"><i class="layui-icon layui-icon-edit"></i></button>
+                                <button class="layui-btn layui-btn-sm layui-btn-danger del-btn" data-id="{{$child_branch['id']}}" data-url="{{route('menus.destroy', $child_branch['id'])}}"><i class="layui-icon layui-icon-delete"></i></button>
                             </div>
                         </td>
                     </tr>

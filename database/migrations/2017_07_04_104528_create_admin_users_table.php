@@ -20,6 +20,7 @@ class CreateAdminUsersTable extends Migration {
 			$table->string('mobile', 11)->nullable()->comment('手机号码');
             $table->smallInteger('sex')->default(1)->comment('性别');
 			$table->string('password', 60)->comment('密码');
+//            $table->string('test', 60)->comment('测试');
 			$table->string('remember_token', 100)->nullable()->comment('TOKEN');
 			$table->timestamps();
 		});

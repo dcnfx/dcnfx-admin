@@ -26,8 +26,9 @@ class RoleController extends BaseController
     public function edit($id=0)
     {
         $permission = Permission::get()->toArray();
-        $delId = explode(',',config('admin')['permission_table_cannot_manage_ids']);
+        $delId = explode(',',config('admin.permission_table_cannot_manage_ids'));
         foreach ($permission as $k => $v){
+            //不显示 不可编辑的
             if(in_array($v['id'],$delId))unset($permission[$k]);
         }
         $info = $id?Role::find($id):[];

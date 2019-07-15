@@ -34,7 +34,7 @@
         <label class="layui-form-label">所属角色：</label>
         <div class="layui-input-block">
             @foreach($roles as $role)
-                <input type="checkbox" value="{{$role['id']}}" required {{in_array($role['id'],$rolelist)?'checked':''}} lay-filter="roles_check" name="permission_roles[]" title="{{$role['display_name']}}">
+                <input type="checkbox" value="{{$role['id']}}" required {{in_array($role['id'],$rolelist)?'checked':''}} lay-filter="roles_check" name="permission_roles" title="{{$role['display_name']}}">
             @endforeach
         </div>
     </div>
@@ -43,7 +43,7 @@
 @section('js')
     <script>
         layui.use(['form','jquery','laypage', 'layer'], function() {
-            var form = layui.form(),
+            var form = layui.form,
                 $ = layui.jquery;
             form.render();
             var layer = layui.layer;
@@ -56,7 +56,7 @@
             form.on('submit(formDemo)', function(data) {
                 var chk_value =[];
                 var is_have_admin = 1;
-                $('input[name="permission_roles[]"]:checked').each(function(){
+                $('input[name="permission_roles"]:checked').each(function(){
                     chk_value.push($(this).val());
                     if($(this).val()==1)is_have_admin--;
                 });
@@ -68,9 +68,10 @@
                     layer.msg('必选选择超级管理员角色',{shift: 6,icon:5});
                     return false;
                 }
+                data.field.permission_roles = chk_value;
                 $.ajax({
-                    url:"{{url('/permissions')}}",
-                    data:$('form').serialize(),
+                    url:"{{route('permissions.store')}}",
+                    data: data.field,
                     type:'post',
                     dataType:'json',
                     success:function(res){

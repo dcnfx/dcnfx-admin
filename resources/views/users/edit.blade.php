@@ -68,7 +68,7 @@
 @section('js')
     <script>
         layui.use(['form','jquery','laypage', 'layer'], function() {
-            var form = layui.form(),
+            var form = layui.form,
                 $ = layui.jquery;
             form.render();
             var layer = layui.layer;
@@ -87,8 +87,8 @@
             });
             form.on('submit(formDemo)', function(data) {
                 $.ajax({
-                    url:"{{url('/users')}}",
-                    data:$('form').serialize(),
+                    url:"{{route('users.store')}}",
+                    data:data.field,
                     type:'post',
                     dataType:'json',
                     success:function(res){

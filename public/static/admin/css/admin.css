@@ -1621,7 +1621,7 @@
 .main-layout-side .layui-nav-tree .layui-nav-child a {
   height: 40px;
   line-height: 40px;
-  padding-left: 45px;
+  padding-left: 35px;
   padding-right: 30px;
 }
 .main-layout-side .layui-nav-tree .layui-nav-child a:hover {

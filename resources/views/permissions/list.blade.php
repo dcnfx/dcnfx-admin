@@ -1,7 +1,7 @@
 @section('title', '权限列表')
 @section('header')
     <div class="layui-inline">
-    <button class="layui-btn layui-btn-sm layui-btn-normal addBtn" data-desc="添加权限" data-url="{{url('/permissions/0/edit')}}"><i class="layui-icon">&#xe654;</i></button>
+    <button class="layui-btn layui-btn-sm layui-btn-normal addBtn" data-desc="添加权限" data-url="{{route('permissions.edit',0)}}"><i class="layui-icon">&#xe654;</i></button>
     <button class="layui-btn layui-btn-sm layui-btn-warm freshBtn"><i class="layui-icon layui-icon-refresh-3"></i></button>
     </div>
 @endsection
@@ -38,8 +38,8 @@
                 <td class="hidden-xs">{{$info['updated_at']}}</td>
                 <td>
                     <div class="layui-inline">
-                        <button class="layui-btn layui-btn-sm layui-btn-normal edit-btn" data-id="{{$info['id']}}" data-desc="修改权限" data-url="{{url('/permissions/'. $info['id'] .'/edit')}}"><i class="layui-icon layui-icon-edit"></i></button>
-                        <button class="layui-btn layui-btn-sm layui-btn-danger del-btn" data-id="{{$info['id']}}" data-url="{{url('/permissions/'.$info['id'])}}"><i class="layui-icon layui-icon-delete"></i></button>
+                        <button class="layui-btn layui-btn-sm layui-btn-normal edit-btn" data-id="{{$info['id']}}" data-desc="修改权限" data-url="{{route('permissions.edit',$info['id'])}}"><i class="layui-icon layui-icon-edit"></i></button>
+                        <button class="layui-btn layui-btn-sm layui-btn-danger del-btn" data-id="{{$info['id']}}" data-url="{{route('permissions.destroy', $info['id'])}}"><i class="layui-icon layui-icon-delete"></i></button>
                     </div>
                 </td>
             </tr>
@@ -50,12 +50,7 @@
 @section('js')
     <script>
         layui.use(['form', 'jquery','laydate', 'layer'], function() {
-            var form = layui.form(),
-                $ = layui.jquery,
-                laydate = layui.laydate,
-                layer = layui.layer
-            ;
-            laydate({istoday: true});
+            var form = layui.form;
             form.render();
             form.on('submit(formDemo)', function(data) {
             });

@@ -26,11 +26,27 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
     Route::get('/gewt',                 'HomeController@configr');
     Route::get('/index',                'HomeController@welcome');
     Route::post('/sort',                'HomeController@changeSort');
+    Route::get('/userinfo',             'UserController@userInfo');
+    Route::post('/saveinfo/{type}',     'UserController@saveInfo');
     Route::resource('/menus',           'MenuController');
     Route::resource('/logs',            'LogController');
     Route::resource('/users',           'UserController');
-    Route::get('/userinfo',             'UserController@userInfo');
-    Route::post('/saveinfo/{type}',     'UserController@saveInfo');
     Route::resource('/roles',           'RoleController');
     Route::resource('/permissions',     'PermissionController');
+
+
 });
+
+/**
+ *  Route::resource('/users', 'UsersController'); 等同于
+ * Route::get('/users', 'UsersController@index')->name('users.index');
+ * Route::get('/users/{user}', 'UsersController@show')->name('users.show');
+ * Route::get('/users/create', 'UsersController@create')->name('users.create');
+ * Route::post('/users', 'UsersController@store')->name('users.store');
+ * Route::get('/users/{user}/edit', 'UsersController@edit')->name('users.edit');
+ * Route::delete('/users/{user}', 'UsersController@destroy')->name('users.destroy');
+ *
+ * Route::patch('/users/{user}', 'UsersController@update')->name('users.update');
+
+ *
+ */

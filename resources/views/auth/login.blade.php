@@ -14,7 +14,7 @@
     <div class="m-login">
         <h3>后台管理系统</h3>
         <div class="m-login-warp">
-            <form class="layui-form" method="post" action="{{url('/login')}}">
+            <form class="layui-form" method="post" action="{{route('admin.login.login')}}">
                 {{ csrf_field() }}
                 <div class="layui-form-item">
                     <input type="text" value="{{ old('username') }}" name="username" required lay-verify="username" placeholder="用户名" autocomplete="off" class="layui-input">
@@ -27,7 +27,7 @@
                         <input type="text" name="verity" lay-verify="verity" placeholder="验证码" autocomplete="off" class="layui-input">
                     </div>
                     <div class="layui-inline">
-                        <img class="verifyImg" onclick="this.src=this.src+'?c='+Math.random();" src="{{url('/verify')}}" />
+                        <img class="verifyImg" onclick="this.src=this.src+'?c='+Math.random();" src="{{route('admin.verify.verify')}}" />
                     </div>
                     @if (count($errors) > 0)
                         @foreach ($errors->all() as $error)

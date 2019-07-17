@@ -33,7 +33,7 @@
                 <div class="layui-tab-content">
                     <div class="layui-tab-item layui-show" style="background: #f5f5f5;">
                         <!--1-->
-                        <iframe src="{{url('/index')}}" width="100%" height="100%" id="iframe" name="iframe" scrolling="auto" class="iframe" framborder="0"></iframe>
+                        <iframe src="{{route('admin.index')}}" width="100%" height="100%" id="iframe" name="iframe" scrolling="auto" class="iframe" framborder="0"></iframe>
                         <!--1end-->
                     </div>
                 </div>

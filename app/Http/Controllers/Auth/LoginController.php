@@ -31,7 +31,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/';
+    protected $redirectTo = '/admin';
 
     /**
      * Create a new controller instance.
@@ -45,7 +45,7 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         if($request->input('verity')==session('code'))return $this->doLogin($request);
-        else return redirect('/login')->withErrors([trans('fzs.login.false_verify')]);
+        else return redirect('/admin/login')->withErrors([trans('fzs.login.false_verify')]);
     }
     public function username()
     {
@@ -54,7 +54,7 @@ class LoginController extends Controller
 
     protected function authenticated(Request $request, $user)
     {
-        Log::addLogs(trans('fzs.login.login_info'),'/login',$user->id);
+        Log::addLogs(trans('fzs.login.login_info'),'/admin/login',$user->id);
         return $this->oriAuthenticated($request, $user);
     }
 }

@@ -40,15 +40,15 @@ class AuthCheck
      */
     public function handle($request, Closure $next)
     {
-        if($request->path() == 'logout') {
+        if($request->path() == 'admin/logout') {
             $this->auth->logout();
-            return redirect('/');
+            return redirect('/admin');
         }
         if ($this->auth->guest()) {
             if ($request->ajax()) {
                 return new JsonResponse(['msg'=>trans('fzs.common.no_permission'),'status'=>0], 200);
             } else {
-                return redirect()->guest('/login');
+                return redirect()->guest('/admin/login');
             }
         }
 

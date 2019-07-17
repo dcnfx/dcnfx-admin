@@ -6,7 +6,7 @@
  * @Time: 2017/07/14 15:57
  * @version     1.0 版本号
  */
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 use App\Models\Admin;
 use Gregwar\Captcha\CaptchaBuilder;
 use Gregwar\Captcha\PhraseBuilder;

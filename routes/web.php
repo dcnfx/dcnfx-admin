@@ -12,29 +12,27 @@
 */
 
 //验证码
-Route::get('/verify',                   'HomeController@verify');
+Route::get('/verify',                   'Admin\HomeController@verify')->name('admin.verify.verify');
 //登陆模块
 //Auth::routes();
-Route::group(['namespace'  => "Auth"], function () {
-    Route::get('/login',                'LoginController@showLoginForm')->name('login');
-    Route::post('/login',               'LoginController@login');
-    Route::get('/logout',               'LoginController@logout')->name('logout');
+Route::group(['namespace'  => "Auth",'prefix'=>'admin'], function () {
+    Route::get('/login',                'LoginController@showLoginForm')->name('admin.login.showLoginForm');
+    Route::post('/login',               'LoginController@login')->name('admin.login.login');;
+    Route::get('/logout',               'LoginController@logout')->name('admin.logout');
 });
 //后台主要模块
-Route::group(['middleware' => ['auth', 'permission']], function () {
+Route::group(['namespace'  => "Admin",'middleware' => ['auth', 'permission'],'prefix'=>'admin'], function () {
     Route::get('/',                     'HomeController@index');
     Route::get('/gewt',                 'HomeController@configr');
-    Route::get('/index',                'HomeController@welcome');
-    Route::post('/sort',                'HomeController@changeSort');
-    Route::get('/userinfo',             'UserController@userInfo');
+    Route::get('/index',                'HomeController@welcome')->name('admin.index');
+    Route::post('/sort',                'HomeController@changeSort')->name('admin.sort');
+    Route::get('/userinfo',             'UserController@userInfo')->name('admin.userinfo');
     Route::post('/saveinfo/{type}',     'UserController@saveInfo');
     Route::resource('/menus',           'MenuController');
     Route::resource('/logs',            'LogController');
     Route::resource('/users',           'UserController');
     Route::resource('/roles',           'RoleController');
     Route::resource('/permissions',     'PermissionController');
-
-
 });
 
 /**

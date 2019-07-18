@@ -35,6 +35,12 @@ Route::group(['namespace'  => "Admin",'middleware' => ['auth', 'permission'],'pr
     Route::resource('/permissions',     'PermissionController');
 });
 
+
+
+
+//主页
+Route::get('/',                   'Home\IndexController@index');
+
 /**
  *  Route::resource('/users', 'UsersController'); 等同于
  * Route::get('/users', 'UsersController@index')->name('users.index');

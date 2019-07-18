@@ -35,8 +35,8 @@
                 <td class="hidden-xs">{{$info['mobile']}}</td>
                 <td>
                     <div class="layui-inline">
-                        <button class="layui-btn layui-btn-sm layui-btn-normal edit-btn" data-id="{{$info['id']}}" data-desc="修改用户" data-url="{{url('/users/'. $info['id'] .'/edit')}}"><i class="layui-icon layui-icon-edit"></i></button>
-                        <button class="layui-btn layui-btn-sm layui-btn-danger del-btn" data-id="{{$info['id']}}" data-url="{{url('/users/'.$info['id'])}}"><i class="layui-icon layui-icon-delete"></i></button>
+                        <button class="layui-btn layui-btn-sm layui-btn-normal edit-btn" data-id="{{$info['id']}}" data-desc="修改用户" data-url="{{ route('users.edit', $info['id'])}}"><i class="layui-icon layui-icon-edit"></i></button>
+                        <button class="layui-btn layui-btn-sm layui-btn-danger del-btn" data-id="{{$info['id']}}" data-url="{{route('users.destroy', $info['id'])}}"><i class="layui-icon layui-icon-delete"></i></button>
                     </div>
                 </td>
             </tr>

@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
     <title>修改用户</title>
-    <link rel="stylesheet" type="text/css" href="/static/admin/layui/css/layui.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/admin/layui/v2.5.4/css/layui.css"/>
     <link rel="stylesheet" type="text/css" href="/static/admin/css/admin.css"/>
 </head>
 <body>
@@ -51,7 +51,7 @@
                     </div>
 
                 </div>
-                <input name="id" type="hidden" value="{{$userinfo['id'] or 0}}">
+                <input name="id" type="hidden" value="{{$userinfo['id'] ?? 0}}">
                 <div class="layui-form-item">
                     <div class="layui-input-block">
                         <button class="layui-btn layui-btn-normal" lay-submit lay-filter="adminInfo">立即提交</button>
@@ -97,10 +97,10 @@
         </div>
     </div>
 </div>
-<script src="/static/admin/layui/layui.js" type="text/javascript" charset="utf-8"></script>
+<script src="/static/admin/layui/v2.5.4/layui.js" type="text/javascript" charset="utf-8"></script>
 <script>
     layui.use(['form','jquery','element'], function(){
-        var form = layui.form(),
+        var form = layui.form,
             $ = layui.jquery;
         form.render();
         form.verify({
@@ -125,7 +125,7 @@
         });
         form.on('submit(adminInfo)', function(data){
             $.ajax({
-                url:"{{url('/saveinfo/1')}}",
+                url:"{{route('admin.userinfo.store',1)}}",
                 data:$('#info_form').serialize(),
                 type:'post',
                 dataType:'json',
@@ -146,7 +146,7 @@
         });
         form.on('submit(adminPassword)', function(data){
             $.ajax({
-                url:"{{url('/saveinfo/2')}}",
+                url:"{{route('admin.userinfo.store',2)}}",
                 data:$('#pwd_form').serialize(),
                 type:'post',
                 dataType:'json',

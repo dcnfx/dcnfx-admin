@@ -1,7 +1,7 @@
 @section('title', '用户列表')
 @section('header')
     <div class="layui-inline">
-    <button class="layui-btn layui-btn-sm layui-btn-normal addBtn" data-desc="添加用户" data-url="{{url('/users/0/edit')}}"><i class="layui-icon">&#xe654;</i></button>
+    <button class="layui-btn layui-btn-sm layui-btn-normal addBtn" data-desc="添加用户" data-url="{{route('users.edit', 0)}}"><i class="layui-icon layui-icon-add-1"></i></button>
     <button class="layui-btn layui-btn-sm layui-btn-warm freshBtn"><i class="layui-icon layui-icon-refresh-3"></i></button>
     </div>
 @endsection

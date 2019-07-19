@@ -18,13 +18,6 @@ laravel_layui基础权限后台是一套基于Laravel框架开发的系统，不
 
 ## 导航
 
-  * [效果预览](#效果预览pcmobile)
-  	- [首页](#首页)
-  	- [用户管理](#用户管理)
-  	- [角色管理](#角色管理)
-  	- [权限管理](#权限管理)
-  	- [菜单管理](#菜单管理)
-  	- [日志管理](#日志管理)
   * [安装步骤](#安装步骤)
   	- [1.获取代码](#1获取代码)
   	- [2.安装依赖](#2安装依赖)
@@ -32,44 +25,13 @@ laravel_layui基础权限后台是一套基于Laravel框架开发的系统，不
   	- [4.修改`env`配置](#4修改-env-配置)
   	- [5.数据库迁移](#5数据库迁移)
   	- [6.访问首页](#6访问首页)
+  	- [7.数据外挂](#7数据外挂)
   * [环境配置](#环境配置仅供参考)
   	- [1.windows](#1windows)
   	- [2.linux(apache)](#2linuxapache)
   	- [3.linux(nginx)](#3linuxnginx)
   * [感谢](#感谢)
-## 效果预览(pc/mobile)
 
-#### 首页
-
-![](./img/index.png)
-
-![](./img/m-index.png)  
-
-#### 用户管理
-
-![](./img/user.png)
-
-![](./img/m-user.png)
-#### 角色管理
-
-![](./img/role.png)
-
-![](./img/m-role.png)
-#### 权限管理
-
-![](./img/pre.png)
-
-![](./img/m-pre.png)
-#### 菜单管理
-
-![](./img/menu.png)
-
-![](./img/m-menu.png)
-#### 日志管理
-
-![](./img/log.png)
-
-![](./img/m-log.png)
 ## 安装步骤
 #### 1.获取代码
 新建一个文件夹，进入该文件夹，利用git等工具输入以下命令：
@@ -104,9 +66,14 @@ laravel_layui基础权限后台是一套基于Laravel框架开发的系统，不
        Schema::defaultStringLength(191);
     }
 #### 6.访问首页
-访问自己的配置好的域名  
+访问自己的配置好的域名/admin  
 用户名：admin  
 密码：f123456
+
+### 7.数据外挂
+- 外挂到/uploads
+- 建立软链接：ln -s /uploads   /data/wwwroot/XXXX/storage/app/public
+- php artisan storage:link 
 
 ## 环境配置（仅供参考）
 #### 1.windows

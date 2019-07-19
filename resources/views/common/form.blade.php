@@ -17,16 +17,11 @@
         <div class="layui-row layui-col-space15">
             <div class="layui-col-md12">
                 <div class="layui-card">
-                    <form class="layui-form layui-card-header" action="">
-                        <div class="layui-form-item">
-                            <div class="layui-inline tool-btn">
-                                @yield('header')
-                            </div>
-                            {{ csrf_field() }}
-                        </div>
-                    </form>
-                    <div class="layui-form layui-card-body" id="table-list">
-                        @yield('table')
+                    <div class="layui-card-header layuiadmin-card-header-auto">
+                        @yield('header')
+                    </div>
+                    <div class="layui-form layui-card-body">
+                        @yield('form')
                     </div>
                 </div>
             </div>

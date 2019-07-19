@@ -86,7 +86,7 @@
                         <input type="password" name="pwd_confirmation" required lay-verify="pwd_confirmation" placeholder="请输入密码" autocomplete="off" class="layui-input">
                     </div>
                 </div>
-                <input name="id" type="hidden" value="{{$userinfo['id'] or 0}}">
+                <input name="id" type="hidden" value="{{$userinfo['id'] ?? 0}}">
 
                 <div class="layui-form-item">
                     <div class="layui-input-block">

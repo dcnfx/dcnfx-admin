@@ -27,12 +27,16 @@ Route::group(['namespace'  => "Admin",'middleware' => ['auth', 'permission'],'pr
     Route::get('/index',                'HomeController@welcome')->name('admin.index');
     Route::post('/sort',                'HomeController@changeSort')->name('admin.sort');
     Route::get('/userinfo',             'UserController@userInfo')->name('admin.userinfo');
-    Route::post('/saveinfo/{type}',     'UserController@saveInfo');
+    Route::post('/saveinfo/{type}',     'UserController@saveInfo')->name('admin.userinfo.store');
     Route::resource('/menus',           'MenuController');
     Route::resource('/logs',            'LogController');
     Route::resource('/users',           'UserController');
     Route::resource('/roles',           'RoleController');
     Route::resource('/permissions',     'PermissionController');
+
+
+    Route::get('/material/upload',                 'MaterialController@upload');
+    Route::post('/material/upload',                 'MaterialController@store')->name('admin.material.upload.store');
 });
 
 

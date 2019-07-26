@@ -8,6 +8,7 @@
  */
 namespace App\Http\Controllers\Admin;
 use App\Models\Admin;
+use App\Models\Material;
 use Gregwar\Captcha\CaptchaBuilder;
 use Gregwar\Captcha\PhraseBuilder;
 use Illuminate\Http\Request;
@@ -67,5 +68,25 @@ class HomeController extends BaseController
             'mysql_version'  =>  DB::select("SELECT VERSION() as version")[0]->version
         );
         return $sys_info;
+    }
+
+    public function data(Request $request,$type)
+    {
+        $model = $type;
+        switch (strtolower($model)) {
+            case 'materials':
+                $query = new Material();
+                break;
+            default:
+                break;
+        }
+        $res = $query->paginate($request->get('limit', 30))->toArray();
+        $data = [
+            'code' => 0,
+            'msg' => '正在请求中...',
+            'count' => $res['total'],
+            'data' => $res['data']
+        ];
+        return response()->json($data);
     }
 }

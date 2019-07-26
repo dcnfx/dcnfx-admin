@@ -44,4 +44,10 @@ return [
     'admin_permissions_for_role_id'           =>'ap_id',
     //cannot del
     'cannot_del_admin_ids'          =>  '1',
+
+    //upload_extensions
+    'allowed_model_extensions'       =>  'obj,dgene,gltf,glb',
+    'allowed_texture_extensions'     => 'png,jpg,jpeg,webp',
+    'uncompress_model_extensions'    =>  'dgene,webp,gltf,glb',
+    'maxUploadSize'    =>  500,
 ];

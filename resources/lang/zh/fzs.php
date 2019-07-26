@@ -27,6 +27,13 @@ return [
         'del_menu'             =>    '删除菜单',
         'handle_menu'          =>    '操作菜单',
     ],
+    'material' => [
+        'upload_success'       =>    '上传成功',
+        'process_success'      =>    '处理完成',
+        'upload_fail'          =>    '上传失败',
+        'process_fail'         =>    '处理失败',
+        'del_material'         =>    '删除素材',
+    ],
     'users' => [
         'notdel'               =>    '该用户不可以删除',
         'notedit'              =>    '该用户不可以编辑',

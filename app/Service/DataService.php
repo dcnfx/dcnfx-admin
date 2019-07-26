@@ -5,6 +5,8 @@ use App\Models\Admin;
 use App\Models\Role;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class DataService{
 
@@ -18,6 +20,7 @@ class DataService{
                         $model->title = $inputs['name'];
                         $model->icon = $inputs['icon'];
                         $model->uri = $inputs['uri'];
+                        $model->show = $inputs['is_show'];
                         $model->order = $inputs['order'];
                         $model->routes = 'url:'.$inputs['uri'];
                         $roles = $inputs['roles'];
@@ -193,6 +196,91 @@ class DataService{
                         return ['status'=>0,'msg'=>trans('fzs.common.wrong')];
                 }
                 break;
+
+            case 'materials':
+                switch ($kind[1]){
+                    case 'add_or_update':
+
+                        break;
+                    case 'delete':
+                        $model->id = $inputs['id'];
+                        $model->exists = true;
+                        try{
+                            Storage::delete($model->path);
+                            foreach ($model->compressed()->get() as $compressedItem){
+                                if( Storage::exists( $compressedItem -> path )){
+                                    Storage::delete( $compressedItem -> path);
+                                }
+                                //强制删除，不留痕迹
+                                $compressedItem->forceDelete();
+                            }
+                            //强制删除，不留痕迹
+                            $model->forceDelete();
+                        }
+                        catch (\Exception $e){
+                            return ['status'=>0,'msg'=>trans('fzs.common.fail')];
+                        }
+                        return ['status'=>1,'msg'=>trans('fzs.common.success')];
+                        break;
+                    default:
+                        return ['status'=>0,'msg'=>trans('fzs.common.wrong')];
+                }
+                break;
+            case 'streams':
+                switch ($kind[1]){
+                    case 'add_or_update':
+                        $model->title = $inputs['title'];
+                        $model->folder = $inputs['folder'];
+                        $model->type = $inputs['type'];
+                        $model->url = $inputs['url'];
+                        $model->frame = $inputs['frame'];
+                        $model->cam_to_world = json_encode($inputs['cam_to_world']);
+                        $model->intrinsics = json_encode($inputs['intrinsics']);
+                        $model->remarks = $inputs['remarks'];
+                        if($inputs['id']){
+                            $model->exists = true;
+                            $model->id = $inputs['id'];
+                        }
+                        try{
+                            if (!$model->save()) {
+                                return ['status'=>0,'msg'=>trans('fzs.common.fail')];
+                            }
+                        }catch (\Exception $e){
+                            return ['status'=>0,'msg'=>trans('fzs.common.fail')];
+                        }
+                        return ['status'=>1,'msg'=>trans('fzs.common.success')];
+                        break;
+                    case 'delete':
+                        $model->id = $inputs['id'];
+                        $model->exists = true;
+                        try{
+                            $model->delete();
+                        }
+                        catch (\Exception $e){
+                            return ['status'=>0,'msg'=>trans('fzs.common.fail')];
+                        }
+                        return ['status'=>1,'msg'=>trans('fzs.common.success')];
+                        break;
+                    case 'update_status':
+                        $model->status = $inputs['status'];
+                        if($inputs['id']){
+                            $model->exists = true;
+                            $model->id = $inputs['id'];
+                        }
+                        try{
+                            if (!$model->save()) {
+                                return ['status'=>0,'msg'=>trans('fzs.common.fail')];
+                            }
+                        }catch (\Exception $e){
+                            return ['status'=>0,'msg'=>trans('fzs.common.fail')];
+                        }
+                        return ['status'=>1,'msg'=>trans('fzs.common.success')];
+                        break;
+                    default:
+                        return ['status'=>0,'msg'=>trans('fzs.common.wrong')];
+                }
+                break;
+
             default:
                 return ['status'=>0,'msg'=>trans('fzs.common.wrong')];
         }

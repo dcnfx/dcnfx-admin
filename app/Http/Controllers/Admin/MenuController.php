@@ -48,7 +48,7 @@ class MenuController extends BaseController
         $model = new Menu();
         $menu = DataService::handleDate($model,['id'=>$id],'menus-delete');
         if($menu['status']==1)Log::addLogs(trans('fzs.menus.del_menu').trans('fzs.common.success'),'/menus/destroy/'.$id);
-        else Log::addLogs(trans('fzs.menus.del_menu').trans('fzs.menus.fail'),'/menus/destroy/'.$id);
+        else Log::addLogs(trans('fzs.menus.del_menu').trans('fzs.common.fail'),'/menus/destroy/'.$id);
         return $menu;
     }
 }

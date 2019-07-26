@@ -20,7 +20,7 @@
                     <div class="layui-card-header layuiadmin-card-header-auto">
                         @yield('header')
                     </div>
-                    <div class="layui-form layui-card-body">
+                    <div class="layui-card-body">
                         @yield('form')
                     </div>
                 </div>

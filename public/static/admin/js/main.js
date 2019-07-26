@@ -29,6 +29,8 @@ layui.use(['layer', 'form', 'element', 'jquery', 'dialog'], function() {
 		}
 		mainLayout.removeClass('hide-side');
 	});
+
+
 	//监听导航点击
 	element.on('nav(rightNav)', function(elem) {
 		var id = elem.data('id');

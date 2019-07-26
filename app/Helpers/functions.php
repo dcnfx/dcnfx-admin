@@ -18,3 +18,39 @@ if (!function_exists('is_config_id')) {
         return in_array($id, $ids);
     }
 }
+
+function vn_time($timestamp)
+{
+    return date('Y-m-d H:i:s', $timestamp);
+}
+function Ymd_time($timestamp)
+{
+    return date('Ymd', $timestamp);
+}
+
+function formatTime($timestamp,$format='Y-m-d H:i:s')
+{
+    return date($format, $timestamp);
+}
+
+
+function formatSize($str,$moreinfo = true)
+{
+    $sizeArray = explode(',', $str);
+    $byte = $sizeArray[0];
+
+    if ($byte >= 1073741824) {
+        $fileSize = round($byte / 1073741824 * 100) / 100 . ' GB';
+    } elseif ($byte >= 1048576) {
+        $fileSize = round($byte / 1048576 * 100) / 100 . ' MB';
+    } elseif ($byte >= 1024) {
+        $fileSize = round($byte / 1024 * 100) / 100 . ' KB';
+    } else {
+        $fileSize = $byte . ' 字节';
+    }
+    if(count($sizeArray) > 1 && $moreinfo){
+        return '文件大小: '.$fileSize.'，图像尺寸: '.$sizeArray[1] ;
+    } else{
+        return $fileSize;
+    }
+}

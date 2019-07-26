@@ -10,7 +10,6 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 //验证码
 Route::get('/verify',                   'Admin\HomeController@verify')->name('admin.verify.verify');
 //登陆模块
@@ -33,14 +32,30 @@ Route::group(['namespace'  => "Admin",'middleware' => ['auth', 'permission'],'pr
     Route::resource('/users',           'UserController');
     Route::resource('/roles',           'RoleController');
     Route::resource('/permissions',     'PermissionController');
+    Route::resource('/stream',          'StreamController');
 
 
-    Route::get('/material/upload',                 'MaterialController@upload');
-    Route::post('/material/upload',                 'MaterialController@store')->name('admin.material.upload.store');
+    Route::get('/materials/upload',      'MaterialController@upload')->name('admin.materials.upload');
+    Route::post('/materials/upload',     'MaterialController@store')->name('admin.materials.upload.store');
+    Route::get('/materials',             'MaterialController@index');
+    Route::delete('/materials/{material}', 'MaterialController@destroy')->name('admin.materials.destroy');
+    Route::get('/materials/file', 'MaterialController@file')->name('admin.materials.file');
+    Route::get('/materials/data', 'MaterialController@data')->name('admin.materials.data');
+
+
+
+
+    Route::resource('/project',             'ProjectController');
+
+//系统设置
+    Route::get('/system', 'SystemController@index');
+    Route::put('/system', 'SystemController@update')->name('admin.system.update');
 });
 
-
-
+Route::group(['namespace'  => "Api",'prefix'=>'api'], function () {
+    Route::get('/{project}/model/{type1}/texture/{type2}',  'ApiController@file');
+    Route::get('/{project}/scene',  'ApiController@scene');
+});
 
 //主页
 Route::get('/',                   'Home\IndexController@index');

@@ -8,7 +8,8 @@ layui.use(['form', 'jquery', 'laydate', 'layer', 'laypage', 'dialog', 'element']
 	var form = layui.form,
 		layer = layui.layer,
 		$ = layui.jquery,
-		dialog = layui.dialog;
+		dialog = layui.dialog,
+		element = layui.element;
 	//获取当前iframe的name值
 	var iframeObj = $(window.frameElement).attr('name');
 	//全选
@@ -31,6 +32,10 @@ layui.use(['form', 'jquery', 'laydate', 'layer', 'laypage', 'dialog', 'element']
 	}).mouseenter(function() {
 		dialog.tips($(this).data('desc'), '.addBtn');
 	});
+
+
+
+
 
     //顶部刷新
     $('.freshBtn').click(function() {
@@ -86,6 +91,27 @@ layui.use(['form', 'jquery', 'laydate', 'layer', 'laypage', 'dialog', 'element']
 		window.location.href = url+"?id="+id;
 		return false;
 	})
+	$('.go-tab-btn').click(function() {
+		var url=$(this).data('url');
+		var id = $(this).data('id');
+		var text = $(this).data('text');
+		if(!url){
+			return;
+		}
+		var isActive = parent.layui.$('.main-layout-tab .layui-tab-title').find("li[lay-id=" + id + "]");
+		if(isActive.length > 0) {
+			//切换到选项卡
+			parent.layui.element.tabChange('tab', id);
+		} else {
+			parent.layui.element.tabAdd('tab', {
+				title: text,
+				content: '<iframe src="' + url + '" name="iframe' + id + '" class="iframe" framborder="0" data-id="' + id + '" scrolling="auto" width="100%"  height="100%"></iframe>',
+				id: id
+			});
+			parent.layui.element.tabChange('tab', id);
+		}
+		parent.layui.$('#main-layout').removeClass('hide-side');
+	})
 	//编辑栏目
 	$('#table-list').on('click', '.edit-btn', function() {
 		var url = $(this).data('url');
@@ -94,6 +120,15 @@ layui.use(['form', 'jquery', 'laydate', 'layer', 'laypage', 'dialog', 'element']
 		parent.page(desc, url, iframeObj, w = "700px", h = "620px");
 		return false;
 	})
+
+	//图片预览
+	$('#table-list').on('click', '.imageShow', function() {
+		var url= $(this).data('url');
+		var desc= $(this).data('desc');
+		//将iframeObj传递给父级窗口,执行操作完成刷新
+		parent.previewImg(desc, url, iframeObj, w = "700px", h = "620px");
+		return false;
+	});
 });
 
 /**
@@ -143,6 +178,22 @@ function page(title, url, obj, w, h) {
 	}
 }
 
+
+
+function previewImg(title,url,obj,w, h) {
+	iframeObjName = obj;
+	var imgHtml = "<img src='" + url + "' />";
+	//捕获页
+	layer.open({
+		type: 1,
+		shade: false,
+		title: title, //不显示标题
+		//area:['600px','500px'],
+		area: [w, h],
+		content: imgHtml, //捕获的元素，注意：最好该指定的元素要存放在body最外层，否则可能被其它的相对元素所影响
+	});
+}
+
 /**
  * 刷新子页,关闭弹窗
  */
@@ -175,4 +226,35 @@ function changeSort(name,obj) {
             }
         });
     });
+}
+function formatFileSize(bytes) {
+	if (typeof bytes !== 'number') {
+		return '';
+	}
+	if (bytes >= 1000000000) {
+		return (bytes / 1000000000).toFixed(2) + ' GB';
+	}
+	if (bytes >= 1000000) {
+		return (bytes / 1000000).toFixed(2) + ' MB';
+	}
+	return (bytes / 1000).toFixed(2) + ' KB';
+}
+function formatPercentage(floatValue) {
+	return parseFloat(floatValue.toFixed(2)) * 100 + '%';
+}
+
+function formatSerializeJson(serializeArrayData) {
+	layui.use(['jquery'], function() {
+		var $ = layui.jquery;
+		var formJsonData = {};
+		$.each( serializeArrayData, function(i, field){
+			if(!formJsonData[field.name]){
+				formJsonData[field.name] = field.value;
+			}
+			else {
+				formJsonData[field.name] = formJsonData[field.name]+','+field.value;
+			}
+		});
+		return formJsonData;
+	});
 }

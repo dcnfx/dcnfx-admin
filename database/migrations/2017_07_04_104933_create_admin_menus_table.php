@@ -19,6 +19,7 @@ class CreateAdminMenusTable extends Migration {
 			$table->integer('order')->default(0)->comment('菜单排序');
 			$table->string('title', 50)->nullable()->comment('标题');
 			$table->string('icon', 50)->comment('图标');
+            $table->integer('show')->default(1)->comment('是否展示');
 			$table->string('uri', 50)->comment('URI');
 			$table->string('routes', 256)->nullable()->comment('路由,如url:/menu,controller:MenuController');
 			$table->timestamps();

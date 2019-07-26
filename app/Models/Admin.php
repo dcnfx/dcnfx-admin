@@ -1,8 +1,10 @@
 <?php
 
 namespace App\Models;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+
 class Admin extends Model
 {
 
@@ -67,6 +69,14 @@ class Admin extends Model
     public function getMenuId()
     {
         return $this->MenuId;
+    }
+    public function getProjectFolder(){
+        $id = $this->userId();
+        $directories1= Storage::directories($id);
+        $directories = array_map(function($v) use ($id)  {
+            return str_replace( $id.'/','',$v);
+        }, $directories1);
+        return  $directories;
     }
 }
 

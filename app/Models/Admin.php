@@ -23,7 +23,7 @@ class Admin extends Model
 
     public function userId()
     {
-        return Auth::user()['id'];
+        return Auth::id();
     }
     public function userCid()
     {
@@ -72,10 +72,7 @@ class Admin extends Model
     }
     public function getProjectFolder(){
         $id = $this->userId();
-        $directories1= Storage::directories($id);
-        $directories = array_map(function($v) use ($id)  {
-            return str_replace( $id.'/','',$v);
-        }, $directories1);
+        $directories = Material::where('user_id',$id)->groupBy('folder')->pluck('folder');
         return  $directories;
     }
 }

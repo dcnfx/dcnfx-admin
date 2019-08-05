@@ -16,6 +16,7 @@ class CreateAdminProjectsTable extends Migration
         Schema::create('admin_projects', function (Blueprint $table) {
             $table->increments('id');
             $table->string('title', 50)->nullable()->comment('项目名称');
+            $table->string('folder', 30)->nullable();
             $table->string('background', 128)->nullable()->comment('背景图');
             $table->string('logo', 128)->nullable()->comment('logo');
             $table->json('streamlist')->comment('视频列表');

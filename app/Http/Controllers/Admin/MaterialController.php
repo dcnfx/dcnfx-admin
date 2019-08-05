@@ -58,7 +58,7 @@ class MaterialController extends BaseController
         $file = $request->file('file');
         $folder =  $request->input('project_name');
         $admin = new Admin;
-        $material = new Material();
+        $material = new Material;
 
         //检查文件是否上传完成
         if ($file->isValid()){
@@ -93,7 +93,6 @@ class MaterialController extends BaseController
         if($path){
             //$inputData = $request->all();
             $sign = Str::random(32);
-
             $inputData = [
                 'user_id'  => $admin -> userId(),
                 'folder'   => $folder,
@@ -159,6 +158,14 @@ class MaterialController extends BaseController
         $admin = new Admin;
         $directories = $admin -> getProjectFolder();
         return view('material.file',['project_list'=>$directories]);
+    }
+    public function download($id){
+        $material = Material::find($id);
+        if($material){
+            $files  = getRealPath($material->path);
+            $name = $material->filename.'.'.$material->suffix;
+            return response()->download($files, $name ,$headers = ['Content-Type'=>'application/zip;charset=utf-8']);
+        }
     }
     public function data(Request $request){
         $material = Material::query();

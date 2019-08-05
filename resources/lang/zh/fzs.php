@@ -27,6 +27,10 @@ return [
         'del_menu'             =>    '删除菜单',
         'handle_menu'          =>    '操作菜单',
     ],
+    'stream' => [
+        'del_stream'             =>    '删除监控',
+        'handle_stream'          =>    '操作监控',
+    ],
     'material' => [
         'upload_success'       =>    '上传成功',
         'process_success'      =>    '处理完成',

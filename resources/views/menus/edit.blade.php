@@ -83,9 +83,9 @@
             var render = function(data,curr){
                 var arr = []
                     ,thisData = data.concat().splice(curr*nums-nums, nums);
-                console.log($("input[name='icon']").val().slice(4));
+                //console.log($("input[name='icon']").val().slice(4));
                 layui.each(thisData, function(index, item){
-                    console.log(thisData);
+                    //console.log(thisData);
                     var iconclass = '';
                     if($("input[name='icon']").val()==item[2])iconclass = 'layui-btn-warm';
                     arr.push('<div class="layui-btn layui-btn-primary layui-btn-sm fzs-icon '+iconclass+'" data-icon="'+item[2]+'" style="margin-bottom: 8px;margin-left:0;margin-right:10px;" onclick="chose_icon(this)" title="'+item[0]+'"><i class="layui-icon '+item[2] +'"></i></div>');

@@ -9,7 +9,7 @@
     </div>
     <div class="layui-inline">
         <select name="folder">
-            <option value="">{{ $input['folder'] ?? '请选择一个项目路径' }} </option>
+            <option value="{{$input['folder'] ?? ''}}">{{ $input['folder'] ?? '请选择一个项目路径' }} </option>
             @foreach($project_list as $item)
                 <option value="{{$item}}">{{$item}}</option>
             @endforeach
@@ -52,12 +52,12 @@
                 <td>{{formatSize($info->size)}}</td>
                 <td>{{$info->created_at}}</td>
                 <td>
-                    <a class="layui-btn layui-badge layui-bg-green" href="{{asset('storage/'.$info->path)}}">源文件</a>
+                    <a class="layui-btn layui-badge layui-bg-green" href="{{route('admin.materials.download',$info->id)}}">源文件</a>
                     @foreach ($info->compressed()->get() as $item)
                         @if ($item -> type == "texture" )
-                            <button class="layui-btn layui-badge imageShow {{$item->desc=="original"?"layui-bg-blue":"layui-bg-orange"}} " data-url="{{asset('storage/'.$item->path)}}" data-desc="{{ formatSize($item->size)}}">{{$item->desc=="original"?"转格式":$item->desc}}</button>
+                            <button class="layui-btn layui-badge imageShow {{$item->desc=="original"?"layui-bg-blue":"layui-bg-orange"}} " data-url="{{asset('storage/'.$item->path)}}" data-desc="{{ formatSize($item->size)}}">{{$item->desc}}</button>
                         @else
-                            <a class="layui-btn layui-badge {{$item->desc=="original"?"layui-bg-blue":"layui-bg-orange"}} " href="{{asset('storage/'.$item->path)}}">{{$item->desc=="original"?"压缩格式":$item->desc}}</a>
+                            <a class="layui-btn layui-badge {{$item->desc=="original"?"layui-bg-blue":"layui-bg-orange"}} " href="{{asset('storage/'.$item->path)}}">{{$item->desc}}</a>
                         @endif
                     @endforeach
                 </td>

@@ -9,6 +9,14 @@
             <i class="layui-icon layui-icon-website"></i>
         </a>
     </div>
+
+    <div class="menu-btn" lay-unselect="">
+        <a href="javascript:;" layadmin-event="refresh" title="刷新">
+            <i class="layui-icon layui-icon-refresh-3"></i>
+        </a>
+    </div>
+
+
     <ul class="layui-nav" lay-filter="rightNav" style="color: #20222A">
         <li class="layui-nav-item">
             <div class="addBtn hidden-xs" data-desc="管理员信息" data-url="{{route('admin.userinfo')}}"><i class="layui-icon layui-icon-username"></i> {{\Auth::user()->username}}</div>

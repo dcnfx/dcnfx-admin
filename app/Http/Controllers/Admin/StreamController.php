@@ -13,6 +13,10 @@ use App\Models\Log;
 use App\Models\Stream;
 use App\Service\DataService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+
+
 class StreamController extends BaseController
 {
     /**
@@ -44,8 +48,9 @@ class StreamController extends BaseController
     public function store(StoreRequest $request){
         $model = new Stream();
         $stream = DataService::handleDate($model,$request->all(),'streams-add_or_update');
-        if( $stream['status']==1)Log::addLogs(trans('fzs.menus.handle_menu').trans('fzs.common.success'),'/stream/store');
-        else Log::addLogs(trans('fzs.menus.handle_menu').trans('fzs.common.fail'),'/stream/store');
+        //dd($request->get('camera_json'));
+        if( $stream['status']==1)Log::addLogs(trans('fzs.stream.handle_stream').trans('fzs.common.success'),'/stream/store');
+        else Log::addLogs(trans('fzs.stream.handle_stream').trans('fzs.common.fail'),'/stream/store');
         return $stream;
     }
     /**
@@ -75,10 +80,51 @@ class StreamController extends BaseController
     public function destroy($id)
     {
         $model = new Stream();
-        $stream = DataService::handleDate($model,['id'=>$id],'stream-delete');
+        $stream = DataService::handleDate($model,['id'=>$id],'streams-delete');
         if($stream['status']==1)Log::addLogs(trans('fzs.menus.del_menu').trans('fzs.common.success'),'/stream/destroy/'.$id);
         else Log::addLogs(trans('fzs.menus.del_menu').trans('fzs.common.fail'),'/stream/destroy/'.$id);
         return $stream;
+    }
+
+    public function upload(Request $request){
+        //上传文件最大大小,单位M
+        $maxSize = config('admin.maxUploadSize');
+        //支持的上传文件类型
+        $admin = new Admin();
+        $allowed_extensions = ['mp4','jpg'];
+        //返回信息json
+        $data = ['code'=> -1, 'msg'=>'上传失败', 'data'=>''];
+        $file = $request->file('file');
+        //检查文件是否上传完成
+        if ($file->isValid()){
+            //检测文件类型
+            $ext = $file->getClientOriginalExtension();
+            if (!in_array(Str::lower($ext),$allowed_extensions)){
+                $data['msg'] = "请上传".implode(",",$allowed_extensions)."格式的文件";
+                return response()->json($data);
+            }
+            //检测文件大小
+            if ($file->getSize() > $maxSize*1024*1024){
+                $data['msg'] = "每个文件大小限制".$maxSize."MB";
+                return response()->json($data);
+            }
+        }else{
+            $data['msg'] = $file->getErrorMessage();
+            return response()->json($data);
+        }
+        //检查文件是否在该项目下重复
+        $newFile = Str::random(32).".".$file->getClientOriginalExtension();
+        $path = $file->storeAs($admin -> userId().'/media',  $newFile);//路径为用户id/项目名
+        if($path){
+            $data = [
+                'code'  => 0,
+                'msg'   => '上传成功',
+                'url'   => Storage::url($path)
+            ];
+        }else{
+            $data['msg'] = "文件写入失败";
+        }
+        return response()->json($data);
     }
 
 }

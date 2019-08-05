@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-class Project extends Model
+use App\Models\Base\BaseModel;
+class Project extends BaseModel
 {
     protected $table = 'admin_projects';
+    protected $fillable = ['title','folder','background','logo','streamlist','filelist'];
+
 }

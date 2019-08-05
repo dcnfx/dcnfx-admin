@@ -77,16 +77,16 @@ class ImportModel implements ShouldQueue
      * @param bool $addOrginal
      */
     public function compressModel($data,$addOriginal = true){
-        $needCompress =  json_decode($data->config,true)['is_cutface'];
-        $model_config = json_decode($data->config,true)["model_cutface_list"];//减面参数
-        $model_config_list = $needCompress == "on"? explode(',',$model_config) : [];//['5k','1w','5w']
+        $config =  json_decode($data->config,true);
+        $needCompress =  $config['is_cutface'];//on or off
+        $model_config_list = $needCompress == "on" && isset($config["model_cutface_list"])? explode(',',$config["model_cutface_list"]) : [];//['5k','1w','5w']
         if( $addOriginal ) array_push($model_config_list,"original");
-        $model_compress = json_decode($data->config,true)['model_compress'];//'dgene'
+        $model_compress = $config['model_compress'];//'dgene'
         foreach ($model_config_list as $item) {
             if( $item == "original"){
                 if($model_compress == "dgene" && $needCompress == "on"){
                     $compressedFile = $this -> obj2DGene($data -> path, false);
-                }elseif ($model_config == "off"){
+                }elseif ($needCompress == "off"){
                     $compressedFile = $data -> path;
                     $model_compress = $data -> suffix;
                 }else{
@@ -122,14 +122,14 @@ class ImportModel implements ShouldQueue
      * @param bool $addOriginal
      */
     public function compressTexture($data ,$addOriginal = true){
-        $needCompress =  json_decode($data->config,true)['is_resize_image'];
-        $texture_config = json_decode($data->config,true)["texture_resize_list"];//resize参数
-        $texture_config_list = $needCompress == "on" ? explode(',',$texture_config): [];//[512,1024,2048,4096]
+        $config =  json_decode($data->config,true);
+        $needCompress =   $config['is_resize_image'];
+        $texture_config_list = $needCompress == "on" && isset($config["texture_resize_list"]) ? explode(',',$config["texture_resize_list"]): [];//[512,1024,2048,4096]
         if( $addOriginal ) array_push($texture_config_list,"original");
         $originalWidth = \Image::make($this->getRealPath($data->path))->width();
         $originalHeight = \Image::make($this->getRealPath($data->path))->height();
         if( $needCompress == "on" ){
-            $texture_compress = json_decode($data->config,true)['texture_compress'];//'jpg,webp'
+            $texture_compress =  $config['texture_compress'];//'jpg,webp'
             $originalOutput = $this -> resizeTexture($data->path, $originalWidth, $originalHeight, 80, $texture_compress);
         } else {
             $originalOutput = $data -> path;
@@ -139,20 +139,20 @@ class ImportModel implements ShouldQueue
             if( $item == "original"){
                 $compressedFile = $originalOutput;
                 $size = $originalWidth.'*'. $originalHeight;
-            }
-            else{
+            } else{
                 $intItem = intval($item);
                 \Log::info('intItem:'.$intItem);
                 if($intItem < $originalWidth){
-                    $compressedFile = $this -> resizeTexture($data->path,  $intItem,  $intItem, 80, $texture_compress);
-                    $size = $intItem.'*'. $intItem;
+                    $rate = $originalWidth/$intItem; //考虑到原图是4096*2048  这种情况
+                    $compressedFile = $this -> resizeTexture($data->path,  $intItem,  $originalHeight/$rate, 80, $texture_compress);
+                    $size = $intItem.'*'. $originalHeight/$rate;
                     \Log::info('finish-:'. $item. $compressedFile);
-                }
-                else{
+                } else{
                     $compressedFile = $originalOutput;
                     $size = $originalWidth.'*'. $originalHeight;
                 }
             }
+
             $inputData = [
                 'material_id'  =>   $data -> id,
                 'filename'     =>   $data -> filename,
@@ -172,7 +172,6 @@ class ImportModel implements ShouldQueue
      * @return string: fullpath
      */
     function getRealPath($path){
-
         return config('filesystems.disks.public.root').'/'.$path;
     }
 
@@ -192,8 +191,7 @@ class ImportModel implements ShouldQueue
         if(Storage::exists( $outputFile)) {
             if($delete) Storage::delete([$inputFile, $inputFile . '.mtl']);
             return $outputFile;
-        }
-        else {
+        } else {
             Log::addLogs('压缩模型'.trans('fzs.material.process_fail'),'/material/upload');
             return false;
         }
@@ -207,8 +205,7 @@ class ImportModel implements ShouldQueue
         $scriptFile = config_path('cutface_'.$level.'.mlx');
         if(file_exists( $scriptFile )){
             return  $scriptFile;
-        }
-        else{
+        } else{
             Log::addLogs('减面shell未找到','/material/upload');
             return false;
         }
@@ -233,8 +230,7 @@ class ImportModel implements ShouldQueue
         if(Storage::exists( $outputFile)) {
             if($delete) Storage::delete($inputFile);
             return $outputFile;
-        }
-        else {
+        } else {
             Log::addLogs(trans('减面'.'fzs.material.process_fail'),'/material/upload');
             return false;
         }

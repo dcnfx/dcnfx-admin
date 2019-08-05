@@ -32,7 +32,17 @@ function formatTime($timestamp,$format='Y-m-d H:i:s')
 {
     return date($format, $timestamp);
 }
-
+function DeleteHtml($str)  {
+    $str = trim($str);
+    $str = str_replace("\n","",$str);
+//    $str = strip_tags($str,"");
+//    $str = ereg_replace("\t","",$str);
+//    $str = ereg_replace("\r\n","",$str);
+//    $str = ereg_replace("\r","",$str);
+//    $str = ereg_replace("\n","",$str);
+//    $str = ereg_replace(" "," ",$str);
+    return trim($str);
+}
 
 function formatSize($str,$moreinfo = true)
 {
@@ -52,5 +62,11 @@ function formatSize($str,$moreinfo = true)
         return '文件大小: '.$fileSize.'，图像尺寸: '.$sizeArray[1] ;
     } else{
         return $fileSize;
+    }
+}
+if (!function_exists('getRealPath')) {
+    function getRealPath($path)
+    {
+        return config('filesystems.disks.public.root') . '/' . $path;
     }
 }

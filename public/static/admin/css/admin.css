@@ -2195,3 +2195,13 @@ html {
 .layui-form[wid100] .layui-input-block {
   margin-left: 130px;
 }
+.demo-tree-box {
+  width: 400px;
+  max-height: 600px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  overflow: auto;
+}
+.demo-tree {
+  margin: 10px 20px;
+}

@@ -85,7 +85,12 @@
         <fieldset class="layui-elem-field layui-field-title">
             <legend>素材上传列表</legend>
         </fieldset>
+        <div class="layui-input-inline">
         <button type="button" class="layui-btn layui-btn-normal" id="material-upload">选择素材文件</button>
+        </div>
+        <div class="layui-input-inline">
+        <button type="button" class="layui-btn" id="is-show-para">隐藏参数</button>
+        </div>
         <div class="layui-upload-list">
             <table class="layui-table" lay-skin="line">
                 <colgroup>
@@ -151,6 +156,7 @@
 
             //多文件列表示例
             var demoListView = $('#material-upload-list');
+            var files;
             var uploadListIns = upload.render({
                 elem: '#material-upload'
                 ,url: '{{route('admin.materials.upload.store')}}'
@@ -161,7 +167,7 @@
                 ,auto: false
                 ,bindAction: '#material-upload-listAction'
                 ,choose: function(obj){
-                    var files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
+                    files = obj.pushFile(); //将每次选择的文件追加到文件队列
                     //读取本地文件
                     obj.preview(function(index, file, result){
                         var tr = $(['<tr id="upload-'+ index +'">'
@@ -212,13 +218,17 @@
                     var tds = demoListView.find('tr#upload-'+ index).children();
                     if(res.code == 0){ //上传成功
                         tds.eq(3).html('<span style="color: #5FB878;">'+ res.msg +'</span>');
-                        var compress_list = res.compress_list.split(',');
                         var html = "";
-                        $.each( compress_list, function(i, item){
-                            html +=  "<span class='layui-badge layui-bg-green' style='margin-right:5px'>"+item+"</span>"
-                        });
+                        if(res.compress_list !== null){
+                            var compress_list = res.compress_list.split(',');
+                            $.each( compress_list, function(i, item){
+                                html +=  "<span class='layui-badge layui-bg-green' style='margin-right:5px'>"+item+"</span>";
+                            });
+                        }
+                        html +=  "<span class='layui-badge layui-bg-green' style='margin-right:5px'>original</span>";
                         tds.eq(4).html(html); //清空操作
-                        return delete this.files[index]; //删除文件队列已经上传成功的文件
+                        delete files[index];
+                        //return; //删除文件队列已经上传成功的文件
                     } else if(res.code == -1){//上传失败
                         tds.eq(3).html('<span style="color: #FF5722;">'+ res.msg +'</span>');
                         layer.msg(res.msg);
@@ -227,6 +237,9 @@
                         tds.eq(3).html('<span style="color: #FF5722;">上传失败</span>');
                         this.error(index, upload);
                     }
+                }
+                ,allDone: function(obj){
+                    layer.msg('恭喜你，共提交'+obj.total+'个文件，其中成功'+obj.successful+'个，失败'+obj.aborted+'个', {icon: 6});
                 }
                 ,error: function(index, upload){
                     var tr = demoListView.find('tr#upload-'+ index)
@@ -244,6 +257,17 @@
                     $("#material-upload-listAction").removeClass("layui-hide");
                 }
             });
+            $("#is-show-para").click(function () {
+                if($("#form-material").is(':visible')){
+                    $("#form-material").hide();
+                    $("#is-show-para").html("显示参数");
+                }
+                else{
+                    $("#form-material").show();
+                    $("#is-show-para").html("隐藏参数");
+                }
+            });
+
 
 
         });

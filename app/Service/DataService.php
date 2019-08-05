@@ -234,9 +234,12 @@ class DataService{
                         $model->type = $inputs['type'];
                         $model->url = $inputs['url'];
                         $model->frame = $inputs['frame'];
-                        $model->cam_to_world = json_encode($inputs['cam_to_world']);
-                        $model->intrinsics = json_encode($inputs['intrinsics']);
+                        $model->cam_to_world = DeleteHtml($inputs['cam_to_world'] );
+                        $model->intrinsics = DeleteHtml($inputs['intrinsics']);
+                        $model->camera_json = $inputs['camera_json'];
+                        $model->model_list = DeleteHtml($inputs['model_list']);
                         $model->remarks = $inputs['remarks'];
+                        $model->keycode = $inputs['key_code'];
                         if($inputs['id']){
                             $model->exists = true;
                             $model->id = $inputs['id'];
@@ -272,6 +275,60 @@ class DataService{
                                 return ['status'=>0,'msg'=>trans('fzs.common.fail')];
                             }
                         }catch (\Exception $e){
+                            return ['status'=>0,'msg'=>trans('fzs.common.fail')];
+                        }
+                        return ['status'=>1,'msg'=>trans('fzs.common.success')];
+                        break;
+                    default:
+                        return ['status'=>0,'msg'=>trans('fzs.common.wrong')];
+                }
+                break;
+            case 'projects':
+                switch ($kind[1]){
+                    case 'add_or_update':
+                        $model->title = $inputs['title'];
+                        $model->folder = $inputs['folder'];
+                        $model->background = $inputs['background'];
+                        $fileList = [];
+                        $streamList = [];
+                        if(isset($inputs['model'])){
+                            foreach ($inputs['model'] as $item){
+                                $tempArr = explode('|',$item['title']);
+                                if(!in_array($tempArr[1],$fileList)){
+                                    array_push($fileList, $tempArr[1]);
+                                }
+                            }
+                        }
+                        if(isset($inputs['stream'])){
+                            foreach ($inputs['stream'] as $stream){
+                                if(!in_array($stream['id'],$streamList)){
+                                    array_push($streamList, $stream['id']);
+                                }
+                            }
+                        }
+
+                        $model->filelist = json_encode(array('model_quality'=>$inputs['model_quality'],'texture_quality'=>$inputs['texture_quality'],'file'=> $fileList));
+                        $model->streamlist = json_encode($streamList);
+                        if($inputs['id']){
+                            $model->exists = true;
+                            $model->id = $inputs['id'];
+                        }
+                        try{
+                            if (!$model->save()) {
+                                return ['status'=>0,'msg'=>trans('fzs.common.fail')];
+                            }
+                        }catch (\Exception $e){
+                            return ['status'=>0,'msg'=>trans('fzs.common.fail')];
+                        }
+                        return ['status'=>1,'msg'=>trans('fzs.common.success')];
+                        break;
+                    case 'delete':
+                        $model->id = $inputs['id'];
+                        $model->exists = true;
+                        try{
+                            $model->delete();
+                        }
+                        catch (\Exception $e){
                             return ['status'=>0,'msg'=>trans('fzs.common.fail')];
                         }
                         return ['status'=>1,'msg'=>trans('fzs.common.success')];

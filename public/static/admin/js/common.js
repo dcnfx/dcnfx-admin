@@ -156,6 +156,7 @@ function page(title, url, obj, w, h) {
 		var index = layer.open({
 			type: 2,
 			title: title,
+			shadeClose: true,
 			area: [320, h],
 			fixed: false, //不固定
 			content: url,
@@ -168,6 +169,7 @@ function page(title, url, obj, w, h) {
 		var index = layer.open({
 			type: 2,
 			title: title,
+			shadeClose: true,
 			area: [w, h],
 			fixed: false, //不固定
 			content: url,
@@ -258,3 +260,92 @@ function formatSerializeJson(serializeArrayData) {
 		return formJsonData;
 	});
 }
+
+
+//模型标定参数转换
+
+function $0(t) {
+	let n = $1(.5 * t.fov),
+		r = $2(n),
+		u = $3(r),
+		x = $4(u, r, t4),
+		y = [];
+
+	for (let n = 0; n < x.length; n++) {
+		y.push($5(x[n], t.poseMat4));
+	}
+	for (var z = 1; z < 5; z++) result = $6(result, y[z]);
+	return $7(result, .25)
+}
+
+function $1(t) {
+	return t * t1
+}
+
+function $2(t) {
+	return t4 * Math.tan(t)
+}
+
+function $3(t) {
+	return t * t3
+}
+
+function $4(t, n, r) {
+	return [{
+		x: 0,
+		y: 0,
+		z: 0
+	}, {
+		x: -t,
+		y: -n,
+		z: r
+	}, {
+		x: t,
+		y: -n,
+		z: r
+	}, {
+		x: -t,
+		y: n,
+		z: r
+	}, {
+		x: t,
+		y: n,
+		z: r
+	}]
+}
+
+function $5(t, n) {
+	var w = 1 / ( n[12] * t.x + n[13 ] * t.y + n[ 14 ] * t.z + n[ 15 ] );
+	return {
+		x: (n[0] * t.x + n[1] * t.y + n[2] * t.z + n[3]) *
+			w,
+		y: (n[4] * t.x + n[5] * t.y + n[6] * t.z + n[7]) *
+			w,
+		z: (n[8] * t.x + n[9] * t.y + n[10] * t.z + n[11]) * w
+	}
+}
+
+function $6(t, n) {
+	return {
+		x: t.x + n.x,
+		y: t.y + n.y,
+		z: t.z + n.z
+	}
+}
+
+function $7(t, n) {
+	return {
+		x: t.x * n,
+		y: t.y * n,
+		z: t.z * n
+	}
+}
+const t1 = Math.PI / 180,
+	t2 = 180 / Math.PI,
+	t3 = 16 / 9,
+	t4 = 20;
+let result = {
+	x: 0,
+	y: 0,
+	z: 0
+};

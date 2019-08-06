@@ -9,12 +9,12 @@
         <div class="layui-form-item">
             <label class="layui-form-label">背景图片：</label>
             <div class="layui-input-block">
-                <input name="background" lay-verify="required" id="background" autocomplete="off" placeholder="图片地址" value="{{$project['background']?? 'https://fusion.dgene.com/storage/1/media/CcHpSbmo10OG6WgLdEQ06hIw4fvpPYb9.jpg'}}" class="layui-input">
+                <input name="background" lay-verify="required" id="background" autocomplete="off" placeholder="图片地址" value="{{$project['background']?? asset('storage/1/media/CcHpSbmo10OG6WgLdEQ06hIw4fvpPYb9.jpg')}}" class="layui-input">
             </div>
             <div class="layui-upload layui-input-block">
                 <button type="button" class="layui-btn" id="bg-upload">上传图片</button>
                 <div class="layui-upload-list">
-                    <img class="layui-upload-img" style="max-height: 200px" src="{{$project['background']?? 'https://fusion.dgene.com/storage/1/media/CcHpSbmo10OG6WgLdEQ06hIw4fvpPYb9.jpg'}}" id="bg-upload-normal-img">
+                    <img class="layui-upload-img" alt="背景图" style="max-height: 200px" src="{{$project['background'] ?? asset('storage/1/media/CcHpSbmo10OG6WgLdEQ06hIw4fvpPYb9.jpg') }}" id="bg-upload-normal-img">
                     <p id="test-upload-demoText"></p>
                 </div>
             </div>
@@ -22,7 +22,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">文件路径：</label>
             <div class="layui-input-block">
-                <select name="folder" lay-filter="folder" lay-verify="required">
+                <select name="folder"  lay-filter="folder" lay-verify="required">
                     <option value="{{$project['folder'] ?? ''}}">{{ $project['folder'] ?? '请选择一个文件路径' }} </option>
                     @if(!isset($project['folder'] ))
                     @foreach($folders as $item)

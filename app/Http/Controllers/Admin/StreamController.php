@@ -112,7 +112,6 @@ class StreamController extends BaseController
             $data['msg'] = $file->getErrorMessage();
             return response()->json($data);
         }
-        //检查文件是否在该项目下重复
         $newFile = Str::random(32).".".$file->getClientOriginalExtension();
         $path = $file->storeAs($admin -> userId().'/media',  $newFile);//路径为用户id/项目名
         if($path){

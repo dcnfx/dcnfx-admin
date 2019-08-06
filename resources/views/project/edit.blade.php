@@ -78,7 +78,6 @@
     <script>
         layui.use(['form', 'transfer','jquery', 'layer','upload','element','tree'], function() {
             var $ = layui.jquery
-                ,transfer = layui.transfer
                 ,form = layui.form
                 ,upload = layui.upload
                 ,layer = layui.layer
@@ -114,7 +113,7 @@
                     });
                 }
             });
-            var inst1 = tree.render({
+            var tree_model = tree.render({
                 elem: '#tree_model'  //绑定元素
                 ,data:{!! json_encode($file_list) !!}
                 ,showCheckbox: true  //是否显示复选框
@@ -125,7 +124,7 @@
                 }
             });
 
-            var inst2 = tree.render({
+            var tree_stream = tree.render({
                 elem: '#tree_stream'  //绑定元素
                 ,data: {!! json_encode($stream_list) !!}
                 ,showCheckbox: true  //是否显示复选框
@@ -135,16 +134,20 @@
                     ,none: '无数据,请先去添加监控点' //数据为空时的提示文本
                 }
             });
+
+            @if($id == 0)
             form.on('select(folder)', function(data){
+                layer.load(2);
                 $.ajax({
                     url:"{{route('admin.project.data')}}",
                     data:{"folder":data.value,"id":$("input[name='id']").val(),"_token":"{{ csrf_token() }}"},
                     type:'post',
                     dataType:'json',
                     success:function(res){
+                        layer.closeAll('loading'); //关闭loading
                         if(res.code == 0){
                             //渲染
-                            var inst1 = tree.render({
+                            tree_model = tree.render({
                                 elem: '#tree_model'  //绑定元素
                                 ,data: res.data
                                 ,showCheckbox: true  //是否显示复选框
@@ -155,7 +158,7 @@
                                 }
                             });
 
-                            var inst2 = tree.render({
+                            tree_stream = tree.render({
                                 elem: '#tree_stream'  //绑定元素
                                 ,data: res.fusion
                                 ,showCheckbox: true  //是否显示复选框
@@ -187,15 +190,16 @@
                         }
                     },
                     error : function(XMLHttpRequest, textStatus, errorThrown) {
+                        layer.closeAll('loading'); //关闭loading
                         layer.msg('网络失败', {time: 1000});
                     }
                 });
             });
-
+            @endif
+            form.render();
             form.on('submit(formDemo)', function(data) {
                 data.field.model = tree.getChecked('demoId1');
                 data.field.stream = tree.getChecked('demoId2');
-                console.log(data.field);
                 $.ajax({
                     url:"{{route('project.store')}}",
                     data:data.field,

@@ -57,7 +57,7 @@ Route::group(['namespace'  => "Admin",'middleware' => ['auth', 'permission'],'pr
 });
 
 Route::group(['prefix'=>'api'], function () {
-    Route::get('/{project}/model/{type1}/texture/{type2}',  'ApiController@file');
+    Route::get('/{project}/model/{type1}/texture/{type2}',  'Api\ApiController@file');
     Route::get('/{project}/scene',  'Api\ApiController@scene');
     Route::get('/{project}/fusion',  'Api\ApiController@fusion');
 

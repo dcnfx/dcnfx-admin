@@ -43,12 +43,12 @@ class ProjectController extends BaseController
                             'model' =>  ['url'=>asset('storage/'.$compressModel->path),'local'=>'static/'.$compressModel->path],
                             'texture' => [['url'=>asset('storage/'.$compressTexture->path),'local'=>'static/'.$compressTexture->path]],
                         );
-                    } else{
+                    }
+                    else{
                         $out['msg'] = "你请求的模型或贴图不存在";
                         return response()->json($out)->setEncodingOptions(JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
                     }
                 }
-
             }
         }
         return response()->json(['code'=>0,'msg'=>"获取成功",'data'=>$data])->setEncodingOptions(JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
@@ -122,12 +122,15 @@ class ProjectController extends BaseController
     public function edit($id = 0)
     {
         $admin = new Admin;
-        $folders = $admin->getProjectFolder();
+        $material = new Material;
+        $folders = $admin -> getProjectFolder();
         $project = $id ? Project::find($id):[];
+        $file_list = [];
+        $stream_list = [];
         if($id > 0){
-            $allmodel = $this->getModelList($project->folder,'model');
-            $mymodel = json_decode($project->filelist,true)['file'];
-            $mystream = json_decode($project->streamlist,true);
+            $allmodel = $material -> getModelList( $project -> folder,'model');
+            $mymodel = json_decode( $project -> filelist,true)['file'];
+            $mystream = json_decode( $project -> streamlist,true);
             $stream = Stream::where('folder',$project->folder)->get();
             $id_temp = 0;
             foreach ($allmodel as $item){
@@ -137,14 +140,9 @@ class ProjectController extends BaseController
             foreach ($stream as $item){
                 $stream_list[] = ['id'=> $item->id, 'title' => $item->title, 'checked'=>in_array($item->id,$mystream),'disabled'=>$item->status==0];
             }
-            $project['model_quality_list'] = $this->getQualityList($project->folder,'model');
-            $project['texture_quality_list'] = $this->getQualityList($project->folder,'texture');
+            $project['model_quality_list'] = $material -> getQualityList($project->folder,'model');
+            $project['texture_quality_list'] = $material -> getQualityList($project->folder,'texture');
         }
-        else{
-            $file_list = [];
-            $stream_list = [];
-        }
-
         return view('project.edit',['id' => $id, 'project' => $project,'folders'=>$folders,'file_list'=>$file_list,'stream_list'=>$stream_list]);
     }
     public function data(Request $request)
@@ -177,31 +175,8 @@ class ProjectController extends BaseController
                 $out['model_quality'] = isset($config2["model_cutface_list"])? explode(',',$config2["model_cutface_list"]) : [];
             }
         }
-
-
-
         $out['msg'] = "获取成功";
         $out['code'] = 0;
-
         return response()->json($out)->setEncodingOptions(JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
-    }
-
-    /**
-     * @param $folder
-     * @param $type
-     * @return arrary
-     */
-    public function getModelList($folder,$type){
-        $output = Material::where('folder',$folder)->where('type',$type)->groupBy('filename')->pluck('filename');
-        return $output;
-    }
-
-    public function getQualityList($folder,$type){
-        $output = Material::where('folder',$folder)->where('type',$type)->first();
-        $config =  json_decode( $output->config,true);
-        $field = $type == 'model'?"model_cutface_list":"texture_resize_list";
-        $output = isset($config[$field])? explode(',',$config[$field]): [];
-        array_push( $output, 'original');
-        return $output;
     }
 }

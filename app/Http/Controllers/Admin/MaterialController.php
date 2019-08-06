@@ -79,11 +79,7 @@ class MaterialController extends BaseController
         }
         //检查文件是否在该项目下重复
         $originalName = $file->getClientOriginalName();
-        $checkRepeat =  $material->where('user_id',$admin -> userId())
-            ->where('folder', $folder)
-            ->where('filename', str_replace('.'.$ext,'', $originalName))
-            ->where('suffix',Str::lower($ext))
-            ->first();
+        $checkRepeat =  $material -> checkRepeat($originalName, $ext, $folder);
         if($checkRepeat){
             $data['msg'] = "该文件已存在于项目中，请删除后再上传。";
             return response()->json($data);
@@ -107,11 +103,11 @@ class MaterialController extends BaseController
                 $inputData['type'] = 'texture';
                 $inputData['config'] = json_encode($request->only(['is_resize_image', 'texture_compress','texture_resize_list']));
                 $compress_list = $request->input('is_resize_image')== "on"  ? $request->input('texture_resize_list'): "unprocessed";
-            }else if(in_array(Str::lower($ext),$allowed_model_extensions)){
+            }else if(in_array(Str::lower($ext), $allowed_model_extensions)){
                 $inputData['type'] = 'model';
                 $inputData['config'] = json_encode($request->only(['is_cutface', 'model_compress','model_cutface_list']));
                 $compress_list = $request->input('is_cutface')== "on" ? $request->input('model_cutface_list'):"unprocessed";
-            }else if(in_array(Str::lower($ext),$allowed_others_extensions)){
+            }else if(in_array(Str::lower($ext), $allowed_others_extensions)){
                 $inputData['type'] = 'other';
                 $inputData['config'] = '{}';
                 $compress_list ='unprocessed';
@@ -166,76 +162,5 @@ class MaterialController extends BaseController
             $name = $material->filename.'.'.$material->suffix;
             return response()->download($files, $name ,$headers = ['Content-Type'=>'application/zip;charset=utf-8']);
         }
-    }
-    public function data(Request $request){
-        $material = Material::query();
-        $type = $request->input('type');
-        $id_arr = explode(',',$request->input('id'));
-
-
-        if ($request->filled('folder')){
-            $material = $material->where('folder',$request->input('folder'));
-        }
-        if( $type ==2){
-            $material -> find($id_arr);
-        }
-
-//        if ($request->get('title')){
-//            $model = $model->where('title','like','%'.$request->get('title').'%');
-//        }
-
-//        if($request->filled('id')){
-//            $id = $request->input('id');
-//            $id_arr = explode(',',$id);
-//            if($type==1 && !in_array($i,$id_arr)){
-//                $data[] = [
-//                    'id'=> $material->id,
-//                    'name'=>'user_'.$i,
-//                    'sex'=> ($i-1)%2==0?'男':'女'
-//                ];
-//            }
-//            else if($type==2 && in_array($i,$id_arr)){
-//                $data[] = [
-//                    'id'=>$i,
-//                    'name'=>'user_'.$i,
-//                    'sex'=> ($i-1)%2==0?'男':'女'
-//                ];
-//            }
-//
-//        }
-
-
-
-
-
-        $res =  $material->latest()->paginate($request->input('limit',30))->toArray();
-
-
-
-
-
-
-
-//        for ($i=1;$i <=1000;$i++){
-//
-//            if($type==1 && !in_array($i,$id_arr)){
-//                $data[] = [
-//                    'id'=>$i,
-//                    'name'=>'user_'.$i,
-//                    'sex'=> ($i-1)%2==0?'男':'女'
-//                ];
-//            }else if($type==2 && in_array($i,$id_arr)){
-//                $data[] = [
-//                    'id'=>$i,
-//                    'name'=>'user_'.$i,
-//                    'sex'=> ($i-1)%2==0?'男':'女'
-//                ];
-//            }
-//        }
-//        if($type==2){
-//            rsort($data);
-//        }
-//        $out = !$data?[]:array_chunk($data,$limit)[$page-1];
-        return response()->json(['code'=>0,'data'=>$res,'count'=>count($res)]);
     }
 }

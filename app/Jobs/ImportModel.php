@@ -122,15 +122,15 @@ class ImportModel implements ShouldQueue
      * @param bool $addOriginal
      */
     public function compressTexture($data ,$addOriginal = true){
-        $config =  json_decode($data->config,true);
-        $needCompress =   $config['is_resize_image'];
+        $config = json_decode($data->config,true);
+        $needCompress = $config['is_resize_image'];
         $texture_config_list = $needCompress == "on" && isset($config["texture_resize_list"]) ? explode(',',$config["texture_resize_list"]): [];//[512,1024,2048,4096]
         if( $addOriginal ) array_push($texture_config_list,"original");
         $originalWidth = \Image::make($this->getRealPath($data->path))->width();
         $originalHeight = \Image::make($this->getRealPath($data->path))->height();
         if( $needCompress == "on" ){
             $texture_compress =  $config['texture_compress'];//'jpg,webp'
-            $originalOutput = $this -> resizeTexture($data->path, $originalWidth, $originalHeight, 80, $texture_compress);
+            $originalOutput = $this -> resizeTexture($data->path, $originalWidth, $originalHeight, 70, $texture_compress); //jpg
         } else {
             $originalOutput = $data -> path;
             $texture_compress = $data -> suffix;
@@ -143,8 +143,8 @@ class ImportModel implements ShouldQueue
                 $intItem = intval($item);
                 \Log::info('intItem:'.$intItem);
                 if($intItem < $originalWidth){
-                    $rate = $originalWidth/$intItem; //考虑到原图是4096*2048  这种情况
-                    $compressedFile = $this -> resizeTexture($data->path,  $intItem,  $originalHeight/$rate, 80, $texture_compress);
+                    $rate = $originalWidth / $intItem; //考虑到原图是4096*2048  这种情况
+                    $compressedFile = $this -> resizeTexture($data->path,  $intItem,  $originalHeight/$rate, 70, $texture_compress);
                     $size = $intItem.'*'. $originalHeight/$rate;
                     \Log::info('finish-:'. $item. $compressedFile);
                 } else{
@@ -243,10 +243,20 @@ class ImportModel implements ShouldQueue
      * @param string $ext
      * @return bool|string
      */
-    public function resizeTexture($inputFile, $width, $height, $quality = 90 ,$ext = "jpg"){
+    public function resizeTexture($inputFile, $width, $height, $quality = 70 ,$ext = "jpg"){
         $outputFile = $this->folder.'/'.Str::random(32).'.'.$ext;
         try{
-            \Image::make($this->getRealPath($inputFile)) -> resize($width, $height) -> save($this->getRealPath($outputFile), $quality);
+            switch ($ext){
+                case "jpg":
+                    \Image::make($this->getRealPath($inputFile)) -> resize($width, $height) -> save($this->getRealPath($outputFile), $quality);
+                    break;
+                case "webp":
+                    $convertWebp = "cwebp -q ".$quality." -resize ".$width." ".$height." ".$this->getRealPath($inputFile)." -o ".$this->getRealPath($outputFile);
+                    @exec("$convertWebp 2>&1",$outputConvertWebp);
+                   break;
+                default:
+                    break;
+            }
         }catch (\Exception $e){
             Log::addLogs(trans('压缩贴图'.'fzs.material.process_fail'),'/material/upload');
             return false;

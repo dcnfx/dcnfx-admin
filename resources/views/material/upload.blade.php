@@ -60,7 +60,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">压缩格式</label>
                 <div class="layui-input-block">
-                    {{--<input type="radio" name="texture_compress" value="webp" title="webp" checked>--}}
+                    <input type="radio" name="texture_compress" value="webp" title="webp">
                     <input type="radio" name="texture_compress" value="jpg" title="jpg"  checked>
                 </div>
             </div>
@@ -98,7 +98,7 @@
                     <col width="150">
                     <col>
                     <col width="150">
-                    <col width="200">
+                    <col width="255">
                 </colgroup>
                 <thead>
                     <tr>
@@ -267,9 +267,6 @@
                     $("#is-show-para").html("隐藏参数");
                 }
             });
-
-
-
         });
     </script>
 @endsection

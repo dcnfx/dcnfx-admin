@@ -21,6 +21,7 @@ class CreateAdminProjectsTable extends Migration
             $table->string('logo', 128)->nullable()->comment('logo');
             $table->json('streamlist')->comment('视频列表');
             $table->json('filelist')->comment('文件列表');
+            $table->string('download',100)->comment('下载地址');
             $table->unsignedInteger('created_at');
             $table->unsignedInteger('updated_at');
             $table->unsignedInteger('deleted_at')->nullable();

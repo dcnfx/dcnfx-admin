@@ -9,7 +9,7 @@
     </div>
     <div class="layui-inline">
         <select name="folder">
-            <option value="{{$input['folder'] ?? ''}}">{{ $input['folder'] ?? '请选择一个项目路径' }} </option>
+            <option value="{{$input['folder'] ?? ''}}">{{ $input['folder'] ?? '请选择项目路径' }} </option>
             @foreach($project_list as $item)
                 <option value="{{$item}}">{{$item}}</option>
             @endforeach
@@ -17,7 +17,7 @@
     </div>
     <div class="layui-inline">
         <select name="type">
-            <option value="">文件类型</option>
+            <option value="{{$input['type'] ?? ''}}">{{ $input['type'] ?? '选择文件类型' }}</option>
             <option value="model">模型文件</option>
             <option value="texture">贴图文件</option>
             <option value="other">其它文件</option>
@@ -28,19 +28,29 @@
     </div>
     <div class="layui-inline">
         <button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">搜索</button>
+        <button class="layui-btn layui-btn-primary" type="reset" id="reset" lay-filter="formDemo">重置</button>
     </div>
 @endsection
 @section('table')
     <table class="layui-table" lay-even lay-skin="nob" lay-filter="materials">
+        <colgroup>
+            <col width="50">
+            <col>
+            <col>
+            <col>
+            <col>
+            <col width="380">
+            <col>
+        </colgroup>
         <thead>
             <tr>
-                <th lay-data="{field:'checkbox', width:50}"><input type="checkbox" name="" lay-skin="primary" lay-filter="allChoose"></th>
-                <th lay-data="{field:'id', width:80, sort: true}">ID</th>
-                <th lay-data="{field:'filename', width:230}">文件名</th>
-                <th lay-data="{field:'size', width:100}">文件大小</th>
-                <th lay-data="{field:'created_at', width:180, sort: true}">创建时间</th>
-                <th lay-data="{field:'download',width:350}">下载地址</th>
-                <th lay-data="{field:'action'}">操作</th>
+                <th><input type="checkbox" name="" lay-skin="primary" lay-filter="allChoose"></th>
+                <th>ID</th>
+                <th>文件名</th>
+                <th>文件大小</th>
+                <th>创建时间</th>
+                <th>下载地址</th>
+                <th>操作</th>
             </tr>
         </thead>
         <tbody>
@@ -52,7 +62,7 @@
                 <td>{{formatSize($info->size)}}</td>
                 <td>{{$info->created_at}}</td>
                 <td>
-                    <a class="layui-btn layui-badge layui-bg-green" href="{{route('admin.materials.download',$info->id)}}">源文件</a>
+                    <a class="layui-btn layui-badge layui-bg-green" href="{{route('admin.materials.download',$info->sign)}}">源文件</a>
                     @foreach ($info->compressed()->get() as $item)
                         @if ($item -> type == "texture" )
                             <button class="layui-btn layui-badge imageShow {{$item->desc=="original"?"layui-bg-blue":"layui-bg-orange"}} " data-url="{{asset('storage/'.$item->path)}}" data-desc="{{ formatSize($item->size)}}">{{$item->desc}}</button>
@@ -87,10 +97,12 @@
             });
             form.render();
 
-            // laydate.render({istoday: true});
-            table.init('materials', {
-                limit: 50 //注意：请务必确保 limit 参数（默认：10）是与你服务端限定的数据条数一致
-                //支持所有基础参数
+            $('#reset').click(function() {
+                $("input[name='begin']").val('');
+                $("input[name='title']").val('');
+                $("select[name='folder']").val('');
+                $("select[name='type']").val('');
+                $('form').submit();
             });
         });
     </script>

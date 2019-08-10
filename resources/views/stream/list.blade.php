@@ -17,7 +17,7 @@
     </div>
     <div class="layui-inline">
         <select name="type">
-            <option value="">监控类型</option>
+            <option value="{{$input['type'] ?? ''}}">{{ $input['type'] ?? '选择监控类型' }}</option>
             <option value="offline">本地流</option>
             <option value="online">实时流</option>
         </select>
@@ -27,6 +27,7 @@
     </div>
     <div class="layui-inline">
         <button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">搜索</button>
+        <button class="layui-btn layui-btn-primary" type="reset" id="reset" lay-filter="formDemo">重置</button>
     </div>
 @endsection
 @section('table')
@@ -100,6 +101,13 @@
             });
             form.on('submit(formDemo)', function(data) {
                 console.log(data);
+            });
+            $('#reset').click(function() {
+                $("input[name='begin']").val('');
+                $("input[name='title']").val('');
+                $("select[name='folder']").val('');
+                $("select[name='type']").val('');
+                $('form').submit();
             });
 
         });

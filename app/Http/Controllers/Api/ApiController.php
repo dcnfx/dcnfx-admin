@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Material;
+use App\Models\Project;
 use App\Models\Stream;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Str;
 
 class ApiController extends Controller
 {
@@ -18,35 +18,22 @@ class ApiController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function file($project,$type1,$type2){
-        $data=[];
-        $out = ['code'=> -1, 'msg'=>'数据获取中', 'data'=>$data];
-        $material = Material::where('folder',$project)->get();
+        $out = ['code'=>0,'msg'=>"获取成功"];
+        $model = new  Material();
+        $projectModel = new Project();
+        $material =  $model -> where('folder',$project)->get();
         if($material->isEmpty()){
-            $out['msg'] = "你的项目不存在";
-            return response()->json($out)->setEncodingOptions(JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
-        }
-
-        foreach ( $material as $item){
-            if($item->type == 'model'){
-                foreach ( $material as $item1){
-                    if($item1 -> type == 'texture' && Str::contains($item1->filename,$item->filename) ){
-                        $model = $item->compressed->where('desc',$type1)->first();
-                        $texture = $item1->compressed->where('desc',$type2)->first();
-                        if( $model && $texture){
-                            $data[] = array(
-                                'index' =>  $item->filename,
-                                'model' =>  ['url'=>asset('storage/'.$model->path),'local'=>'static/'.$model->path,'cdn'=>'https://cdn.model.dgene.com/fusion/'.$model->path],
-                                'texture' => [['url'=>asset('storage/'.$texture->path),'local'=>'static/'.$texture->path,'cdn'=>'https://cdn.model.dgene.com/fusion/'.$texture->path.'!/format/webp']],
-                            );
-                        } else{
-                            $out['msg'] = "你请求的模型或贴图不存在";
-                            return response()->json($out)->setEncodingOptions(JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
-                        }
-                    }
-                }
+            $out = ['code'=> -1, 'msg'=>'你的项目不存在'];
+        } else{
+            $modelIndex =  $model -> getModelList( $project,'model');
+            $res = $projectModel -> getProjectFile($modelIndex ,$project,$type1,$type2,$project=='xujiahui');
+            if($res){
+                $out['data'] = $res;
+            } else{
+                $out = ['code'=> -1, 'msg'=>'数据获取失败，请检查参数是否正确'];
             }
         }
-        return response()->json(['code'=>0,'msg'=>"获取成功",'data'=>$data])->setEncodingOptions(JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
+        return response()->json($out)->setEncodingOptions(JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
     }
 
     /**

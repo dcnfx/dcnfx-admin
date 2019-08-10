@@ -10,7 +10,8 @@
         "gregwar/captcha": "1.*",
         "intervention/image": "^2.5",
         "laravel/framework": "5.7.*",
-        "laravel/tinker": "~1.0"
+        "laravel/tinker": "~1.0",
+        "chumper/zipper": "1.0.x"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

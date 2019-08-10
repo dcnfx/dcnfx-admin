@@ -1,4 +1,5 @@
 <?php
+use Chumper\Zipper\Zipper;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,14 +43,14 @@ Route::group(['namespace'  => "Admin",'middleware' => ['auth', 'permission'],'pr
     Route::delete('/materials/{material}', 'MaterialController@destroy')->name('admin.materials.destroy');
     Route::get('/materials/file', 'MaterialController@file')->name('admin.materials.file');
     Route::get('/materials/data', 'MaterialController@data')->name('admin.materials.data');
-    Route::get('/materials/{id}', 'MaterialController@download')->name('admin.materials.download');
+    Route::get('/materials/download/{sign}', 'MaterialController@download')->name('admin.materials.download');
     Route::resource('/project',             'ProjectController');
     Route::post('/project/get/data','ProjectController@data')->name('admin.project.data');
     Route::get('/project/api/{id}/file',             'ProjectController@file');
     Route::get('/project/api/{id}/scene',            'ProjectController@scene');
     Route::get('/project/api/{id}/fusion',            'ProjectController@fusion');
-
-
+    Route::get('/project/package/{id}',            'ProjectController@package')->name('admin.project.package');
+    Route::get('/project/download/{id}',            'ProjectController@download')->name('admin.project.download');
 
 //系统设置
     Route::get('/system', 'SystemController@index');
@@ -69,8 +70,17 @@ Route::group(['prefix'=>'api'], function () {
 //主页
 Route::get('/',                   'Home\IndexController@index');
 Route::get('/test',function () {
-    $output = \App\Models\Material::find(['154','153']);
-    return response()->json($output);
+    $model = new \App\Models\Project();
+    $project = $model -> find(1);
+    $config =  json_decode($project->filelist,true);
+    $folder = $project -> folder;
+    $modelList = $config['file'];
+    $modelQuality = $config['model_quality'];
+    $textureQuality = $config['texture_quality'];
+    $res =  $model->getProjectFile($modelList,$folder,$modelQuality,$textureQuality);
+    if($res){
+       return response()->json($res)->setEncodingOptions(JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
+    }
 });
 
 

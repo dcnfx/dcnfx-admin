@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Log;
 use phpDocumentor\Reflection\Types\Integer;
+use function MongoDB\BSON\toJSON;
 
 class ImportModel implements ShouldQueue
 {
@@ -79,7 +80,7 @@ class ImportModel implements ShouldQueue
     public function compressModel($data,$addOriginal = true){
         $config =  json_decode($data->config,true);
         $needCompress =  $config['is_cutface'];//on or off
-        $model_config_list = $needCompress == "on" && isset($config["model_cutface_list"])? explode(',',$config["model_cutface_list"]) : [];//['5k','1w','5w']
+        $model_config_list = ($needCompress == "on" && isset($config["model_cutface_list"]))? explode(',',$config["model_cutface_list"]) : [];//['5k','1w','5w']
         if( $addOriginal ) array_push($model_config_list,"original");
         $model_compress = $config['model_compress'];//'dgene'
         foreach ($model_config_list as $item) {
@@ -94,7 +95,7 @@ class ImportModel implements ShouldQueue
                 }
             }else{
                 $mlx_script = $this -> getCutScript($item);
-                $cutObjFile = $this -> cutFace($data -> path, $mlx_script, false);
+                $cutObjFile = $this -> cutFace( $data -> path, $mlx_script, false );
                 if($model_compress == "dgene"){
                     $compressedFile = $this -> obj2DGene($cutObjFile, true);
                 }else{
@@ -179,7 +180,7 @@ class ImportModel implements ShouldQueue
      * @param $inputFile: storage default filesystem path
      * From obj file to dgene file, and store it in the same path as OBJ.
      */
-    function obj2DGene($inputFile,$delete = true){
+    function obj2DGene($inputFile,$delete){
         $outputFile = str_replace('.obj', '.dgene', $inputFile);
         $cmdCompressObj = "draco_encoder -i '".$this->getRealPath($inputFile)."' -o '". $this->getRealPath($outputFile)."'";
         try{
@@ -189,7 +190,7 @@ class ImportModel implements ShouldQueue
             return false;
         }
         if(Storage::exists( $outputFile)) {
-            if($delete) Storage::delete([$inputFile, $inputFile . '.mtl']);
+            if($delete) Storage::delete([$inputFile, $inputFile. '.mtl']);
             return $outputFile;
         } else {
             Log::addLogs('压缩模型'.trans('fzs.material.process_fail'),'/material/upload');
@@ -216,7 +217,7 @@ class ImportModel implements ShouldQueue
      * @param $scriptFile
      * @return string $outputFile
      */
-    public function cutFace($inputFile, $scriptFile, $delete = true){
+    public function cutFace($inputFile, $scriptFile, $delete){
         $outputFile = $this->folder.'/'.Str::random(32).'.obj';
         $cmdCutFace = "xvfb-run -a -s '-screen 0 800x600x24' meshlabserver -i '".$this->getRealPath($inputFile)."' -o '". $this->getRealPath($outputFile)."'  -s '".$scriptFile."' -om vn vt wt";
         try{

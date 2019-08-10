@@ -34,7 +34,7 @@ class MaterialController extends BaseController
             $material->where('filename', 'LIKE', '%'.trim($request->input('title')).'%');
         }
         if($request->filled('begin')) {
-            $material->where('created_at', '>=', trim($request->input('begin')));
+            $material->where('created_at', '>=', strtotime($request->input('begin')));
         }
         $data = $material->latest('id')->paginate(50);
         return view('material.list',['list'=>$data,'input'=>$request->all(),'project_list'=>$directories]);
@@ -84,8 +84,8 @@ class MaterialController extends BaseController
             $data['msg'] = "该文件已存在于项目中，请删除后再上传。";
             return response()->json($data);
         }
-        $newFile = Str::random(32).".".$file->getClientOriginalExtension();
-        $path = $file->storeAs($admin -> userId().'/'.$folder,  $newFile);//路径为用户id/项目名
+        $newFile = Str::random(32).".".Str::lower($ext);
+        $path = $file->storeAs($admin -> userId().'/'.$folder, $newFile);//路径为用户id/项目名
         if($path){
             //$inputData = $request->all();
             $sign = Str::random(32);
@@ -155,12 +155,9 @@ class MaterialController extends BaseController
         $directories = $admin -> getProjectFolder();
         return view('material.file',['project_list'=>$directories]);
     }
-    public function download($id){
-        $material = Material::find($id);
-        if($material){
-            $files  = getRealPath($material->path);
-            $name = $material->filename.'.'.$material->suffix;
-            return response()->download($files, $name ,$headers = ['Content-Type'=>'application/zip;charset=utf-8']);
-        }
+    public function download($sign){
+        $material = new Material;
+        return $material->download($sign);
+
     }
 }

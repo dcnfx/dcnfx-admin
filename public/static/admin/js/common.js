@@ -121,6 +121,11 @@ layui.use(['form', 'jquery', 'laydate', 'layer', 'laypage', 'dialog', 'element']
 		return false;
 	})
 
+	$('.show-tip').mouseenter(function() {
+			dialog.tips($(this).data('desc'), $(this));
+		});
+
+
 	//图片预览
 	$('#table-list').on('click', '.imageShow', function() {
 		var url= $(this).data('url');

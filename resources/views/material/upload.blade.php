@@ -64,7 +64,6 @@
                     <input type="radio" name="texture_compress" value="jpg" title="jpg"  checked>
                 </div>
             </div>
-
             <fieldset class="layui-elem-field layui-field-title">
                 <legend>素材项目名</legend>
             </fieldset>
@@ -161,7 +160,7 @@
                 elem: '#material-upload'
                 ,url: '{{route('admin.materials.upload.store')}}'
                 ,accept: 'file'
-                ,size: 1024 * 300  //300MB
+                ,size: 1024 * 400  //400MB
                 ,exts: 'jpg|png|jpeg|obj|mtl|dgene|webp|gltf|glb'
                 ,multiple: true
                 ,auto: false

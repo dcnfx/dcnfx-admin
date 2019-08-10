@@ -44,4 +44,13 @@ class Material extends BaseModel
             ->where('suffix',Str::lower($ext))
             ->first();
     }
+    public function download($sign)
+    {
+        $material = $this->where('sign',$sign)->first();
+        if($material){
+            $files  = getRealPath($material->path);
+            $name = $material->filename.'.'.$material->suffix;
+            return response()->download($files, $name ,$headers = ['Content-Type'=>'application/zip;charset=utf-8']);
+        }
+    }
 }

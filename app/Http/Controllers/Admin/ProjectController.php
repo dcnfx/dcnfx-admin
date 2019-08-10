@@ -9,8 +9,6 @@ use App\Models\Project;
 use App\Models\Stream;
 use App\Service\DataService;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Str;
 
 class ProjectController extends BaseController
 {
@@ -23,35 +21,21 @@ class ProjectController extends BaseController
 
     }
     public function file($id){
-        $project = Project::find($id);
+        $model = new Project();
+        $project = $model -> find($id);
         $config =  json_decode($project->filelist,true);
         $folder = $project->folder;
         $modelList = $config['file'];
         $modelQuality = $config['model_quality'];
         $textureQuality = $config['texture_quality'];
-        $data=[];
-        $out = ['code'=> -1, 'msg'=>'数据获取中', 'data'=>$data];
-        foreach ($modelList as $modelFile){
-            $model = Material::where('folder',$folder)->where('type','model')->where('filename',$modelFile)->first();
-            foreach (Material::where('folder',$folder)->where('type','texture')->get() as $item) {
-                if(Str::contains($item->filename,$model->filename)){
-                    $compressModel = $model->compressed->where('desc', $modelQuality)->first();
-                    $compressTexture = $item->compressed->where('desc',$textureQuality)->first();
-                    if( $compressModel &&  $compressTexture){
-                        $data[] = array(
-                            'index' =>  $compressModel->filename,
-                            'model' =>  ['url'=>asset('storage/'.$compressModel->path),'local'=>'static/'.$compressModel->path],
-                            'texture' => [['url'=>asset('storage/'.$compressTexture->path),'local'=>'static/'.$compressTexture->path]],
-                        );
-                    }
-                    else{
-                        $out['msg'] = "你请求的模型或贴图不存在";
-                        return response()->json($out)->setEncodingOptions(JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
-                    }
-                }
-            }
+        $out = ['code'=> 0, 'msg'=>'数据获取成功'];
+        $res = $model -> getProjectFile($modelList,$folder,$modelQuality,$textureQuality);
+        if($res){
+            $out['data'] = $res;
+        } else{
+            $out = ['code'=> -1, 'msg'=>'数据获取失败，请检查参数是否正确'];
         }
-        return response()->json(['code'=>0,'msg'=>"获取成功",'data'=>$data])->setEncodingOptions(JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
+        return response()->json($out)->setEncodingOptions(JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
     }
 
 
@@ -132,10 +116,8 @@ class ProjectController extends BaseController
             $mymodel = json_decode( $project -> filelist,true)['file'];
             $mystream = json_decode( $project -> streamlist,true);
             $stream = Stream::where('folder',$project->folder)->get();
-            $id_temp = 0;
-            foreach ($allmodel as $item){
-                $id_temp ++;  //防止替换文件，改变id，数据库里不保存ID，故此处id随意了，没取原id
-                $file_list[] = ['title' => $project->folder.'|'.$item,'id'=> $id_temp,'checked'=>in_array($item,$mymodel)];
+            foreach ($allmodel as $key=>$item){
+                $file_list[] = ['title' => $project->folder.'|'.$item,'id'=> $key,'checked'=>in_array($item,$mymodel)];
             }
             foreach ($stream as $item){
                 $stream_list[] = ['id'=> $item->id, 'title' => $item->title, 'checked'=>in_array($item->id,$mystream),'disabled'=>$item->status==0];
@@ -147,36 +129,41 @@ class ProjectController extends BaseController
     }
     public function data(Request $request)
     {
+        $material = new Material();
         $project = $request->input('folder');
         $id = $request->input('id');
-        $out = ['code'=> -1, 'msg'=>'数据获取失败', 'data'=>[],'fusion'=>[]];
+        $out = ['code'=> 0, 'msg'=>"获取成功"];
         $streams = Stream::where('folder',$project)->get();
-        $materials_model = Material::where('folder',$project)->where('type','model')->get();
-        $materials_texture = Material::where('folder',$project)->where('type','texture')->get();
+        $materials_model = $material -> where('folder',$project)->where('type','model')->get();
         if ($streams ->isEmpty()){
-            $out['msg'] = "你的监控不存在";
-            $out['fusion']=[];
+            $out = ['code'=> 0, 'msg'=>"你的监控不存在",'fusion'=>[]];
         }
         if ($id>0){
-
+            $out = ['code'=> -1, 'msg'=>"并非新建项目"];
         } else {
             foreach ($streams as $stream){
                 $out['fusion'][] = ['title' => $stream->title,'id'=> $stream->id,'checked'=>true,'disabled'=>$stream->status==0];
             }
-            foreach ($materials_model as $model){
-                foreach ( $materials_texture as $texture){
-                    if(Str::contains($texture->filename,$model->filename) ){
-                        $out['data'][] = ['title' => $model->folder.'|'.$model->filename.'|'.$model->suffix.'|'.$texture->suffix,'id'=> $model->id,'checked'=>true];
-                        $config1 =  json_decode($texture->config,true);
-                        $out['texture_quality'] = isset($config1["texture_resize_list"]) ? explode(',',$config1["texture_resize_list"]): [];
-                    }
-                }
+            foreach ($materials_model as $key => $model){
+                $firstTex = $material -> where('folder',$project)->where('type','texture') ->where('filename', 'like',$model->filename.'%') -> first();
+                $config1 =  json_decode($firstTex->config,true);
+                $out['texture_quality'] = isset($config1["texture_resize_list"]) ? explode(',',$config1["texture_resize_list"]): [];
+                $out['data'][$key] = ['title' => $model->folder.'|'.$model->filename.'|'.$model->suffix.'|'.$firstTex->suffix,'id'=> $key,'checked'=>true];
                 $config2 =  json_decode($model->config,true);
                 $out['model_quality'] = isset($config2["model_cutface_list"])? explode(',',$config2["model_cutface_list"]) : [];
             }
         }
-        $out['msg'] = "获取成功";
-        $out['code'] = 0;
         return response()->json($out)->setEncodingOptions(JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
     }
+
+    public function package($id){
+        $project = new Project();
+        return $project->package($id);
+    }
+
+    public function download($id){
+        $project = new Project();
+        return $project->download($id);
+    }
+
 }

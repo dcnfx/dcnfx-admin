@@ -37,7 +37,7 @@ class StreamController extends BaseController
             $stream->where('filename', 'LIKE', '%'.trim($request->input('title')).'%');
         }
         if($request->filled('begin')) {
-            $stream->where('created_at', '>=', trim($request->input('begin')));
+            $stream->where('created_at', '>=', strtotime($request->input('begin')));
         }
         $data =  $stream->latest('id')->paginate(50);
         return view('stream.list',['list'=>$data,'input'=>$request->all(),'project_list'=>$directories]);

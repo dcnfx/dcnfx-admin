@@ -1,0 +1,36 @@
+{
+    "code":0,
+    "msg":"获取成功",
+    "data":{
+        "camera": {
+            "fov": 45,
+            "position": {
+                "x": 400,
+                "y": 400,
+                "z": 400
+            },
+            "lookAt": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "near": 0.1,
+            "far": 40000
+        },
+        "renderer": {
+            "antialias": true,
+            "alpha": true,
+            "preserveDrawingBuffer": true,
+            "style": {
+                "top": "0px",
+                "left": "0px",
+                "zIndex": "4",
+                "position": "fixed"
+            }
+        },
+        "controls": {
+            "autoRotate": false
+        },
+        "isGui": false
+    }
+}

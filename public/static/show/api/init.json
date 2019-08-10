@@ -1,0 +1,19 @@
+{
+    "code":0,
+    "msg":"获取成功",
+    "data":[
+        {
+            "index": "Tile_+019_+038",
+            "model": {
+                "url": "static/hkAirport/obj/Tile_+019_+038.obj",
+                "local": null
+            },
+            "texture": [
+                {
+                    "url": "static/hkAirport/jpg/Tile_+019_+038_0.jpg",
+                    "local": null
+                }
+            ]
+        }
+    ]
+}

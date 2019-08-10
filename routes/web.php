@@ -68,20 +68,8 @@ Route::group(['prefix'=>'api'], function () {
 });
 
 //主页
-Route::get('/',                   'Home\IndexController@index');
-Route::get('/test',function () {
-    $model = new \App\Models\Project();
-    $project = $model -> find(1);
-    $config =  json_decode($project->filelist,true);
-    $folder = $project -> folder;
-    $modelList = $config['file'];
-    $modelQuality = $config['model_quality'];
-    $textureQuality = $config['texture_quality'];
-    $res =  $model->getProjectFile($modelList,$folder,$modelQuality,$textureQuality);
-    if($res){
-       return response()->json($res)->setEncodingOptions(JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
-    }
-});
+//Route::get('/',                   'Home\IndexController@index');
+Route::get('/',                   'Admin\HomeController@index');
 
 
 /**

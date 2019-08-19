@@ -1,6 +1,8 @@
-laravel_layui基础权限后台
+基础权限后台
 ===============
-laravel_layui基础权限后台是一套基于Laravel框架开发的系统，不需要开发者重复不必要的工作，就可以实现后台功能的快速开发，其主要特点包括：
+域名 host/admin 
+
+基础权限后台是一套基于Laravel框架开发的系统，不需要开发者重复不必要的工作，就可以实现后台功能的快速开发，其主要特点包括：
 - [x] 集成 Composer，安装使用方便。
 - [x] 用户管理可以配置自己的权限。
 - [x] 角色管理可以配置用户及权限。
@@ -11,10 +13,8 @@ laravel_layui基础权限后台是一套基于Laravel框架开发的系统，不
 - [x] pc端和手机端都能适配。
 - [ ] 其它优化，持续进行中 ......
 
-> laravel_layui的运行环境要求PHP5.7及以上；Laravel 框架要求为5.7及以上（默认是5.7，如果要使用laravel高版本，请先在composer install之前修改composer.json文件）。
-
-线上DEMO [laravel_layui](http://laravel_layui.fang99.cc)   
-你也可以用手机扫下二维码查看手机效果 ![](./img/code.png)
+> 运行环境要求PHP5.7及以上；Laravel 框架要求为5.7及以上（默认是5.7，如果要使用laravel高版本，请先在composer install之前修改composer.json文件）。
+ 
 
 ## 导航
 
@@ -37,7 +37,7 @@ laravel_layui基础权限后台是一套基于Laravel框架开发的系统，不
 新建一个文件夹，进入该文件夹，利用git等工具输入以下命令：
 
     git init  
-    git clone https://github.com/dcnfx/laravel_layui.git
+    git clone XXXX
 #### 2.安装依赖
     composer install  
 #### 3.生成APP_KEY
